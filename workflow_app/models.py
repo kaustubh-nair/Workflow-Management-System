@@ -1,5 +1,9 @@
 from django.db import models
 
+
+class Role(models.Model):
+    name = models.CharField(max_length=200)
+
 class ProcessTemplate(models.Model):
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=1000)
@@ -14,9 +18,11 @@ class TaskTemplate(models.Model):
     description = models.CharField(max_length=1000)
     all_or_any = models.BooleanField()
     choice = models.CharField(max_length=200)
+    roles = models.ManyToManyField(Role)
 
 class Actor(models.Model):
     name = models.CharField(max_length=200)
+    roles = models.ManyToManyField(Role)
 
 class Task(models.Model):
     output = models.CharField(max_length=200)
