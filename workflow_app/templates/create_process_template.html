@@ -2,6 +2,11 @@
 
 {% load bootstrap4 %}
 
+<h1> Create process</h1>
+<br>
+<h2>{{process_template.name}}</h2>
+<h3>{{process_template.description}}</h3>
+
 <form action="google.com" method="post" class="form">
     {% csrf_token %}
     {% bootstrap_form form %}
