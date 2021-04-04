@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from datetime import datetime
 from django.http import HttpResponse
-from . import models
+
+from .models import Role
 
 def index(request):
-    return HttpResponse("asd")
+    role = Role()
+    return HttpResponse(role)
