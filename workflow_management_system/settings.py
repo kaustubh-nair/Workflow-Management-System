@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'workflow_app.apps.WorkflowAppConfig',
+    'bootstrap4',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -77,7 +78,7 @@ WSGI_APPLICATION = 'workflow_management_system.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'USER': 'djangouser',
+        'USER': 'djangouse',
         'PASSWD': 'P@sSw0rd!123',
         'OPTIONS': {
             'read_default_file': '/etc/mysql/my.cnf',

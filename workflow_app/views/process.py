@@ -2,8 +2,8 @@ from django.shortcuts import render
 from datetime import datetime
 from django.http import HttpResponse
 
-from ..models import Role
+from ..models import ProcessTemplate
+from .forms import SomeForm
 
 def index(request):
-    role = Role()
-    return HttpResponse(role)
+    return render(request, 'create_process.html', {'form': SomeForm()})

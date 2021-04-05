@@ -1,0 +1,18 @@
+{% load bootstrap4 %}
+{% load static %}
+
+<link type="text/x-scss" href="{% static 'workflow_app/_variables.scss' %}" rel="stylesheet" media="screen">
+<link rel="stylesheet" type="text/css" href="{% static 'workflow_app/bootstrap.css' %}">
+<link type="text/x-scss" href="{% static 'workflow_app/_bootswatch.scss' %}" rel="stylesheet" media="screen">
+
+
+{# Display a form #}
+
+<form action="google.com" method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+        <button type="button" class="btn btn-primary">Submit</button>
+      <button type="button" class="btn btn-warning">Warning</button>
+    {% endbuttons %}
+</form>
