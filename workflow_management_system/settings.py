@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'workflow_management_system.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'USER': 'djangouse',
+        'USER': 'djangouser',
         'PASSWD': 'P@sSw0rd!123',
         'OPTIONS': {
             'read_default_file': '/etc/mysql/my.cnf',
