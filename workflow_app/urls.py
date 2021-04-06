@@ -9,4 +9,6 @@ urlpatterns = [
         path('viewdefs', views.sessions.viewdefs, name = 'viewdefs'),
         path('accounts/signup', views.sessions.SignUpView.as_view(), name='signup'),
         path('process/create/', views.process.create, name='create_process'),
+        path('', views.process.index, name='index'),
+        path('execindex', views.execution.index, name='executionindex'),
 ]
