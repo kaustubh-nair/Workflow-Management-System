@@ -8,4 +8,6 @@ urlpatterns = [
         path('', views.sessions.home, name='home'),
         path('viewdefs', views.sessions.viewdefs, name = 'viewdefs'),
         path('accounts/signup', views.sessions.SignUpView.as_view(), name='signup'),
+        path('', views.process.index, name='index'),
+        path('execindex', views.execution.index, name='executionindex'),
 ]
