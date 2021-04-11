@@ -1,0 +1,69 @@
+{% include "./base.html" %}
+
+{% load bootstrap4 %}
+
+<br>
+<br>
+<br>
+<h1> Create a process template</h1>
+<br>
+
+<form method="post" class="post-form">
+    {% csrf_token %}
+    <table border="0.6">
+    {% for field in form.visible_fields %}
+    {% if field.name == 'name' or field.name == 'description' %}
+      <tr>
+        <th>{{ field.label_tag }}</th>
+        <td>
+          {{ field.errors }}
+          {{ field }}
+          {{ field.help_text }}
+        </td>
+      </tr>
+    {% endif %}
+    {% endfor %}
+  </table>
+  <br>
+  <br>
+
+  <h4>Tasks</h4>
+  <table border="1">
+      {% for number, task in tasks.items %}
+      <tr>
+      <table border="1">
+          {% for name, value in task.items %}
+          <tr>
+              <th>{{name}}</th>
+              <td>{{value}}</td>
+          </tr>
+          {% endfor %}
+      </table>
+  <br>
+      </tr>
+      {% endfor %}
+  </table>
+  <br>
+  <br>
+  <h4> New task </h4>
+  <table>
+    {% for field in form.visible_fields %}
+    {% if field.name != 'name' and field.name != 'description' %}
+      <tr>
+        <th>{{ field.label_tag }}</th>
+        <td>
+          {{ field.errors }}
+          {{ field }}
+          {{ field.help_text }}
+        </td>
+      </tr>
+    {% endif %}
+    {% endfor %}
+  </table>
+    
+    {% buttons %}
+        <button type="button" class="btn btn-primary">Add new task</button>
+        <button type="submit" class="btn btn-success">Save</button>
+    {% endbuttons %}
+</form>
+</div> 
