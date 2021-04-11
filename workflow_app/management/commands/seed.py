@@ -1,13 +1,27 @@
-from .role import Role
-from .actor import Actor
-from .process_template import ProcessTemplate
-from .process import Process
-from .task_template import TaskTemplate
-from .task import Task
+from ...models.role import Role
+from ...models.actor import Actor
+from ...models.process_template import ProcessTemplate
+from ...models.process import Process
+from ...models.task_template import TaskTemplate
+from ...models.task import Task
 
 from datetime import datetime
 
-def init():
+from django.core.management.base import BaseCommand
+import random
+
+class Command(BaseCommand):
+    help = "seed database for testing and development."
+
+    def add_arguments(self, parser):
+        parser.add_argument('--mode', type=str, help="Mode")
+
+    def handle(self, *args, **options):
+        self.stdout.write('seeding data...')
+        init(self)
+        self.stdout.write('done.')
+
+def init(self):
     role1 = Role(name = "Role 1")
     role1.save()
     role2 = Role(name = "Role 2")
@@ -91,3 +105,4 @@ def init():
     et213.save()
     et214 = Task(output = "Output of Task 4 Execution 1", deadline = deadlinee1, status = "Not Started", template = tt24, process = e21)
     et214.save()
+
