@@ -10,6 +10,6 @@ class TaskTemplate(models.Model):
     all_or_any = models.BooleanField()
     choice = models.CharField(max_length=200)
     role = models.ForeignKey(Role, on_delete=PROTECT)
-    process_template = models.ForeignKey(ProcessTemplate)
+    process_template = models.ForeignKey(ProcessTemplate, on_delete=PROTECT)
     is_first_task = models.BooleanField(default=False)
     children = models.ManyToManyField("TaskTemplate")
