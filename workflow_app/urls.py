@@ -10,5 +10,5 @@ urlpatterns = [
         path('accounts/signup', views.sessions.SignUpView.as_view(), name='signup'),
         path('process/create/', views.process.create, name='create_process'),
         path('', views.process.index, name='index'),
-        path('execindex', views.execution.index, name='executionindex'),
+        path('execindex/<int:task_id>/', views.execution.index, name='executionindex'),
 ]
