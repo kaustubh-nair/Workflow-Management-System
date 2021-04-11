@@ -7,7 +7,21 @@
 
 <form method="post" class="post-form">
     {% csrf_token %}
-    {% bootstrap_form form %}
+    <table border="0.6">
+    {% for field in form.visible_fields %}
+    {% if field.name == 'name' or field.name == 'description' %}
+      <tr>
+        <th>{{ field.label_tag }}</th>
+        <td>
+          {{ field.errors }}
+          {{ field }}
+          {{ field.help_text }}
+        </td>
+      </tr>
+    {% endif %}
+    {% endfor %}
+  </table>
+    
     {% buttons %}
         <button type="button" class="btn btn-primary">Add new task</button>
         <button type="submit" class="btn btn-success">Save</button>
