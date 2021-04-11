@@ -8,4 +8,5 @@ class Process(models.Model):
     name = models.CharField(max_length=200)
     template = models.ForeignKey(ProcessTemplate, on_delete=models.PROTECT)
     creator = models.ForeignKey(Actor, on_delete=PROTECT)
+    dateOfCreation = models.DateField(max_length=200)
 
