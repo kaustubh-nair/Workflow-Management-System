@@ -13,5 +13,5 @@ urlpatterns = [
         path('process/template/create/', views.process.create_template, name='create_process_template'),
 >>>>>>> URL and view template setup
         path('', views.process.index, name='index'),
-        path('execindex', views.execution.index, name='executionindex'),
+        path('execindex/<int:task_id>/', views.execution.index, name='executionindex'),
 ]
