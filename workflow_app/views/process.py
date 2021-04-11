@@ -22,20 +22,15 @@ def create_template(request):
 
                 keyword = k[6:]
                 if keyword == 'name':
-                    task['name'] = v
-                    tasks[task_number]['name'] = v
+                    tasks[task_number]['name'] = v[0]
                 elif keyword == 'description':
-                    task['description'] = v
-                    tasks[task_number]['description'] = v
+                    tasks[task_number]['description'] = v[0]
                 elif keyword == 'all_or_any':
-                    task['all_or_any'] = v
-                    tasks[task_number]['all_or_any'] = v
+                    tasks[task_number]['all_or_any'] = v[0]
                 elif keyword == 'choice':
-                    task['choice'] = v
-                    tasks[task_number]['choice'] = v
+                    tasks[task_number]['choice'] = v[0]
                 elif keyword == 'role':
-                    task['role'] = v
-                    tasks[task_number]['role'] = v
+                    tasks[task_number]['role'] = v[0]
 
 
         form = ProcessTemplateForm()
