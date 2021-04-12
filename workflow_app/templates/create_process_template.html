@@ -1,6 +1,7 @@
 {% include "./base.html" %}
 
 {% load bootstrap4 %}
+{% load extra_tags %}
 
 <br>
 <br>
@@ -32,10 +33,13 @@
       {% for number, task in tasks.items %}
       <tr>
       <table border="1">
+          Task {{ number }}
           {% for name, value in task.items %}
           <tr>
-              <th>{{name}}</th>
-              <td>{{value}}</td>
+              <th><label for="{{name}}">{{name|humanreadable}}</label></th>
+              <!-- TODO: Inline CSS remove -->
+              <!-- https://stackoverflow.com/a/29949813/9915027 -->
+              <td><input style="color: #000000; background: #ffffff; border-style: none;" type="text" id="{{name}}" name="{{number|addstr:name}}" value="{{value}}" readonly="readonly"></td>
           </tr>
           {% endfor %}
       </table>
