@@ -1,3 +1,16 @@
+{# NOT USING#}
+{% include "../base.html" %}
+
+{# Load the tag library #}
+{% load bootstrap4 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -25,22 +38,60 @@
   </head>
   <body>
     <div class="container-fluid">
+      <div class="page-header">
+        <h1> Execution Name: {{ exec_name }}</h1>
+        <!-- <a href="https://www.google.com">LOL</a> -->
+      </div>
       <div class="row">
         <div class="col-md-7">
-          <div class="page-header">
-            <h1> Execution Name: {{ exec_name }}</h1>
-          </div>
+          {% for task in task_list %}
+            <div id="{{ task.template.name }}">
+              <div class="card">
+                {% if task.status == "Not Started" %}
+                <div class="card-header bg-warning">
+                {% else %}
+                <div class="card-header bg-success">
+                {% endif %}
+                  <a class="card-link " data-toggle="collapse" data-parent="{{task.template.name}}" href="#{{ task.id }}">{{ task.template.name }}</a>
+                </div>
+                {% if task.status == "Not Started" %}
+                <div id="{{ task.id }}" class="collapse " >
+                {% else %}
+                <div id="{{ task.id }}" class="collapse show " >
+                {% endif %}
+                  <div class="card-body text-black">
+                    <p class="card-text">
+                      {{ task.template.description }}
+                    </p>
+                    <p class="card-text">
+                      {{ task.status }}
+                    </p>
+                    <p class="card-text">
+                      Deadline is : {{task.deadline}}
+                    </p>
+                  </div>
+                  <div class="card-footer">
+                    <button type="button" class="btn btn-success btn-xs" onclick="showAlert()">
+                      Mark As Completed
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        <div class="col-md-5">
+          {% if latest_task_list %}
+            <ul class="list-group">
+            {% for task in latest_task_list %}
+              <li class="list-group-item"> {{task.deadline}} </li>
+            {% endfor %}
+            </ul>
+          {% else %}
+            No Tasks Present
+          {% endif %}
         </div>
       </div>
     </div>
-    {% if latest_task_list %}
-    <ul class="list-group">
-      {% for task in latest_task_list %}
-      <li class="list-group-item"> {{task.deadline}} </li>
-      {% endfor %}
-    </ul>
-    {% else %}
-    No Tasks Present
-    {% endif %}
   </body>
 </html>
