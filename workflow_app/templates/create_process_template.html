@@ -60,7 +60,7 @@
   <h4> New task </h4>
   <table>
     {% for field in form.visible_fields %}
-    {% if field.name != 'name' and field.name != 'description' %}
+    {% if field.name != 'name' and field.name != 'description' and field.name != 'new_task_role' %}
       <tr>
         <th>{{ field.label_tag }}</th>
         <td>
@@ -70,6 +70,24 @@
         </td>
       </tr>
     {% endif %}
+    {% if field.name == 'new_task_role' %}
+    <tr>
+        <th>
+        <label for="new_task_role"> New task role</label>
+        </th>
+        <td>
+        <select id="new_task_role" name="new_task_role">
+            {% for choice in field.field.choices %}
+            {{choice}}
+            <option value="{{choice}}">{{choice}}</option>
+            {% endfor %}
+            
+        </select>
+            
+        </td>
+    </tr>
+    {% endif %}
+
     {% endfor %}
   </table>
     
