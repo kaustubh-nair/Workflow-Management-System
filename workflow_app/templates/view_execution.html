@@ -1,0 +1,78 @@
+{% include "./base.html" %}
+
+{% load bootstrap4 %}
+
+<div class="container-fluid">
+  <div class="page-header">
+    <h1> Execution Name: {{ exec_name }}</h1>
+    <!-- <a href="https://www.google.com">LOL</a> -->
+  </div>
+  <div class="row">
+    <div class="col-md-7">
+      {% for task in task_list %}
+        <div id="{{ task.template.name }}">
+          <div class="card">
+            {% if task.status == "Not Started" %}
+            <div class="card-header bg-warning">
+            {% elif task.status == "Completed" %}
+            <div class="card-header bg-success">
+            {% else %}
+            <div class="card-header bg-primary">   
+            {% endif %}
+                <a class="card-link" style="color: black;" data-toggle="collapse" data-parent="{{task.template.name}}" href="#{{task.id}}">{{ task.template.name }}</a>
+            </div>
+            {% if task.status == "Not Started" %}
+            <div id="{{task.id}}" class="collapse " >
+            {% elif task.status == "Started" %}
+            <div id="{{task.id}}" class="collapse show " >
+            {% else %}
+            <div id="{{task.id}}" class="collapse " >
+            {% endif %}
+              <div class="card-body text-black">
+                <p class="card-text">
+                  Description: {{ task.template.description }}
+                </p>
+                <p class="card-text">
+                    Role: {{ task.template.role.name }}
+                </p>
+                <p class="card-text">
+                    Process Template Name: {{ task.template.process_template.name }}
+                </p> 
+                <p class="card-text">
+                  Status: {{ task.status }}
+                </p>
+                <p class="card-text">
+                  Deadline: {{task.deadline}}
+                </p>
+              </div>
+              <div class="card-footer">
+                {% if task.status == "Started" %}
+                <form action="{% url 'completing task' task.process.id task.id %}" method="post" class="post-form">
+                    {% csrf_token %}
+                    {% buttons %}
+                    <button type="submit" class="btn btn-success">Complete Task</button>
+                    {% endbuttons %}
+                </form>
+                {% endif %}
+                <!-- <button type="button" class="btn btn-success btn-xs" onclick="showAlert()">
+                  Mark As Completed
+                </button> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="col-md-5">
+      {% if latest_task_list %}
+        <ul class="list-group">
+        {% for task in latest_task_list %}
+          <li class="list-group-item"> {{task.deadline}} </li>
+        {% endfor %}
+        </ul>
+      {% else %}
+        No Tasks Present
+      {% endif %}
+    </div>
+  </div>
+</div>

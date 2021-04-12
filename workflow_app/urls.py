@@ -11,7 +11,13 @@ urlpatterns = [
         path('accounts/signup', views.sessions.SignUpView.as_view(), name='signup'),
 =======
         path('process/template/create/', views.process.create_template, name='create_process_template'),
+<<<<<<< HEAD
 >>>>>>> URL and view template setup
         path('', views.process.index, name='index'),
         path('execindex/<int:task_id>/', views.execution.index, name='executionindex'),
+=======
+        # path('', views.process.index, name='index'),
+        path('viewexec/<int:exec_id>/', views.execution.index, name='executionindex'),
+        path('viewexec/<int:exec_id>/completetask/<int:task_id>/', views.execution.completeTask, name='completing task')
+>>>>>>> Basic Task Completion Functionality Complete
 ]
