@@ -18,7 +18,6 @@ class TaskTemplate(models.Model):
     def build_tasks(request):
         tasks = {}
         # Tasks are defined in form numberlabel
-        print(request)
         for k,v in request.items():
             if k[0].isdigit():
                 task_number = int([k[0] if not k[1].isdigit() else k[0:2]][0])

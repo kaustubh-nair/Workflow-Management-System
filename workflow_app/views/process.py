@@ -9,10 +9,10 @@ from .forms import ProcessTemplateForm
 def create_template(request):
     tasks = {}
     form = ProcessTemplateForm()
+    messages = []
 
     if request.method == 'POST':
         request_body = dict(request.POST)
-        print(request_body)
         form = ProcessTemplateForm(request.POST.dict())
         tasks = TaskTemplate.build_tasks(request_body)
         if request_body['action'][0] == 'add_task':
@@ -20,9 +20,12 @@ def create_template(request):
         elif request_body['action'][0] == 'save':
             if form.is_valid():
                 form.save()
+                form = ProcessTemplateForm()
+                tasks = {}
+                messages.append({'type': 'success', 'message': 'Process template created successfully'})
     else:
         tasks = TaskTemplate.build_tasks(dict(request.GET))
 
-    context = {'form': form, 'tasks': tasks}
+    context = {'form': form, 'tasks': tasks, 'messages': messages}
 
     return render(request, 'create_process_template.html', context)

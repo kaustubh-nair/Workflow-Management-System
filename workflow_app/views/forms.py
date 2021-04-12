@@ -1,6 +1,7 @@
 from django import forms
+from datetime import date
 
-from ..models import ProcessTemplate, TaskTemplate
+from ..models import Actor, ProcessTemplate, TaskTemplate
 
 class ProcessTemplateForm(forms.Form):
     name = forms.CharField(max_length=200)
@@ -34,4 +35,4 @@ class ProcessTemplateForm(forms.Form):
         return super().__init__(request)
 
     def save(self):
-        ProcessTemplate.objects.create(name=self.name, description=self.description, creator_id=1)
+        ProcessTemplate.objects.create(name=self.name, description=self.description, creator=Actor.objects.first(), dateOfCreation=date.today())

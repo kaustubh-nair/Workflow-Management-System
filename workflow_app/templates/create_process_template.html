@@ -9,6 +9,14 @@
 <h1> Create a process template</h1>
 <br>
 
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li class="alert alert-success {{ message.type }} " > {{ message.message }} </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
 <form method="post" class="post-form">
     {% csrf_token %}
     <table border="0.6">
@@ -67,7 +75,7 @@
     
     {% buttons %}
         <button type="submit" class="btn btn-primary" name="action" value="add_task">Add new task</button>
-        <button type="submit" name="save" class="btn btn-success">Save</button>
+        <button type="submit" name="action" value="save" class="btn btn-success">Save</button>
     {% endbuttons %}
 </form>
 </div> 
