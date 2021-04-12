@@ -6,7 +6,7 @@
 <br>
 <br>
 <br>
-<h1> Create a new process </h1>
+<h1> Create a new {{template}} process </h1>
 <br>
 
 {% if messages %}
@@ -19,11 +19,60 @@
 
 <form method="post" class="post-form">
     {% csrf_token %}
-    <table border="0.6"></table>
+    {% for field in form.visible_fields %}
+    {% if field.name == 'name'%}
+    Name
+    {{ field }}
+    {% endif %}
+    {% endfor %}
+    <br>
+    <br>
+    <table border="1">
+    {% for template in task_templates %}
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Description
+        </th>
+        <th>
+            Role
+        </th>
+        <th>
+            Deadline
+        </th>
+        <th>
+            Status
+        </th>
+    </tr>
+    <tr>
+    {% for k, v in template.items %}
+        {% if k == 'name' or k == 'role' or k == 'description' %}
+        <td>
+            {{ v }}
+        </td>
+    {% endif %}
+    {% endfor %}
+      <td><input type="date"  ></td>
+      <td><input  ></td>
+    {% for field in form.visible_fields %}
+    {% if field.name == 'actors' %}
+        <td>
+        <select id="new_task_role" name="new_task_role">
+            {% for choice in field.field.choices %}
+            {{choice}}
+            <option value="{{choice}}">{{choice}}</option>
+            {% endfor %}
+        </select>
+        </td>
+        {% endif %}
+    {% endfor %}
+    </tr>
+    {% endfor %}
 
   </table>
     {% buttons %}
-        <button type="submit" class="btn btn-primary" name="action" value="add_task">Add new task</button>
         <button type="submit" name="action" value="save" class="btn btn-success">Save</button>
     {% endbuttons %}
 </form>

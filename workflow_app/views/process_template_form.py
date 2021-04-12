@@ -9,7 +9,7 @@ class ProcessTemplateForm(forms.Form):
 
     new_task_name = forms.CharField(max_length=200, required=False)
     new_task_description = forms.CharField(max_length=1000, required=False)
-    #new_task_all_or_any = forms.BooleanField()
+    new_task_all_or_any = forms.BooleanField(required=False)
     #new_task_choice = forms.CharField(max_length=200)
     new_task_role = forms.ChoiceField(choices=[r.name for r in Role.objects.all()])
 
