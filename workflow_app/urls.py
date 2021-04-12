@@ -11,5 +11,4 @@ urlpatterns = [
         path('process/create/', views.process.create, name='create_process'),
         path('viewexec/<int:exec_id>/', views.execution.index, name='executionindex'),
         path('viewexec/<int:exec_id>/completetask/<int:task_id>/', views.execution.completeTask, name='completing task')
->>>>>>> Rebased from Master with Class Changes
 ]
