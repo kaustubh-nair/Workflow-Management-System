@@ -11,4 +11,3 @@ class Task(models.Model):
     template = models.ForeignKey(TaskTemplate, on_delete=models.PROTECT)
     process = models.ForeignKey(Process, on_delete=models.CASCADE)
     actors = models.ManyToManyField(Actor)
-    

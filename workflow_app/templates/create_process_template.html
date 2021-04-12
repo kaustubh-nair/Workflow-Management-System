@@ -1,12 +1,21 @@
 {% include "./base.html" %}
 
 {% load bootstrap4 %}
+{% load extra_tags %}
 
 <br>
 <br>
 <br>
 <h1> Create a process template</h1>
 <br>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li class="alert alert-success {{ message.type }} " > {{ message.message }} </li>
+    {% endfor %}
+</ul>
+{% endif %}
 
 <form method="post" class="post-form">
     {% csrf_token %}
@@ -16,7 +25,6 @@
       <tr>
         <th>{{ field.label_tag }}</th>
         <td>
-          {{ field.errors }}
           {{ field }}
           {{ field.help_text }}
         </td>
@@ -32,10 +40,13 @@
       {% for number, task in tasks.items %}
       <tr>
       <table border="1">
+          Task {{ number }}
           {% for name, value in task.items %}
           <tr>
-              <th>{{name}}</th>
-              <td>{{value}}</td>
+              <th><label for="{{name}}">{{name|humanreadable}}</label></th>
+              <!-- TODO: Inline CSS remove -->
+              <!-- https://stackoverflow.com/a/29949813/9915027 -->
+              <td><input style="color: #000000; background: #ffffff; border-style: none;" type="text" id="{{name}}" name="{{number|addstr:name}}" value="{{value}}" readonly="readonly"></td>
           </tr>
           {% endfor %}
       </table>
@@ -48,22 +59,39 @@
   <h4> New task </h4>
   <table>
     {% for field in form.visible_fields %}
-    {% if field.name != 'name' and field.name != 'description' %}
+    {% if field.name != 'name' and field.name != 'description' and field.name != 'new_task_role' %}
       <tr>
         <th>{{ field.label_tag }}</th>
         <td>
-          {{ field.errors }}
           {{ field }}
           {{ field.help_text }}
         </td>
       </tr>
     {% endif %}
+    {% if field.name == 'new_task_role' %}
+    <tr>
+        <th>
+        <label for="new_task_role"> New task role</label>
+        </th>
+        <td>
+        <select id="new_task_role" name="new_task_role">
+            {% for choice in field.field.choices %}
+            {{choice}}
+            <option value="{{choice}}">{{choice}}</option>
+            {% endfor %}
+            
+        </select>
+            
+        </td>
+    </tr>
+    {% endif %}
+
     {% endfor %}
   </table>
     
     {% buttons %}
-        <button type="button" class="btn btn-primary">Add new task</button>
-        <button type="submit" class="btn btn-success">Save</button>
+        <button type="submit" class="btn btn-primary" name="action" value="add_task">Add new task</button>
+        <button type="submit" name="action" value="save" class="btn btn-success">Save</button>
     {% endbuttons %}
 </form>
 </div> 
