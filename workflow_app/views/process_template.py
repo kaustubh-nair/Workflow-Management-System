@@ -18,11 +18,11 @@ def create_template(request):
         if request_body['action'][0] == 'add_task':
             tasks = TaskTemplate.add_new_task(tasks, request_body)
         elif request_body['action'][0] == 'save':
-            if form.is_valid():
-                form.save()
-                form = ProcessTemplateForm()
-                tasks = {}
-                messages.append({'type': 'success', 'message': 'Process template created successfully'})
+            # if form.is_valid():
+            form.save()
+            form = ProcessTemplateForm()
+            tasks = {}
+            messages.append({'type': 'success', 'message': 'Process template created successfully'})
     else:
         tasks = TaskTemplate.build_tasks(dict(request.GET))
 
