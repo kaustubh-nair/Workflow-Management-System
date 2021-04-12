@@ -1,11 +1,10 @@
 from django.shortcuts import render
 from datetime import datetime
-from django.http import HttpResponse
-from django.urls import reverse_lazy, reverse
 
-from ..models import ProcessTemplate
-from ..models import Role
+from ..models import ProcessTemplate, TaskTemplate
 
-def index(request):
-    role = Role()
-    return HttpResponse(role)
+def create(request):
+    messages=[]
+
+    context = {'messages': messages}
+    return render(request, 'create_process.html', context)

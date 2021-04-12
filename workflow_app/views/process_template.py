@@ -1,10 +1,9 @@
 from django.shortcuts import render
 from datetime import datetime
 from django.template import loader
-from django.http import HttpResponse
 
 from ..models import ProcessTemplate, TaskTemplate
-from .forms import ProcessTemplateForm
+from .process_template_form import ProcessTemplateForm
 
 def create_template(request):
     tasks = {}
