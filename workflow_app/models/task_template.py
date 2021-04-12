@@ -7,8 +7,8 @@ from .role import Role
 class TaskTemplate(models.Model):
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=1000)
-    all_or_any = models.BooleanField()
-    choice = models.CharField(max_length=200)
+    all_or_any = models.BooleanField(default=False)
+    choice = models.CharField(max_length=200, blank=True)
     role = models.ForeignKey(Role, on_delete=PROTECT)
     process_template = models.ForeignKey(ProcessTemplate, on_delete=PROTECT)
     is_first_task = models.BooleanField(default=False)
@@ -20,7 +20,7 @@ class TaskTemplate(models.Model):
         # Tasks are defined in form numberlabel
         for k,v in request.items():
             if k[0].isdigit():
-                task_number = int([k[0] if not k[1].isdigit() else k[0:2]][0])
+                task_number = TaskTemplate.get_task_number_from_param(k)
                 keyword = [k[1:] if not k[1].isdigit() else k[2:]][0]
 
                 if task_number not in tasks:
@@ -46,3 +46,4 @@ class TaskTemplate(models.Model):
     @staticmethod
     def get_task_number_from_param(param):
         task_number = int([param[0] if not param[1].isdigit() else param[0:2]][0])
+        return task_number
