@@ -64,15 +64,9 @@
       {% endfor %}
     </div>
     <div class="col-md-5">
-      {% if latest_task_list %}
-        <ul class="list-group">
-        {% for task in latest_task_list %}
-          <li class="list-group-item"> {{task.deadline}} </li>
-        {% endfor %}
-        </ul>
-      {% else %}
-        No Tasks Present
-      {% endif %}
+      <h2>Execution: {{exec_name}}</h2>
+      <p>Details about Execution</p>
+      <button type="submit" class="btn btn-danger">Delete Execution</button>
     </div>
   </div>
 </div>

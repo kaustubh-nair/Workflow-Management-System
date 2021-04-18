@@ -1,4 +1,4 @@
-from typing import Reversible
+from typing import Counter, Reversible
 from django import template
 from django.http.response import HttpResponseNotAllowed, HttpResponseRedirect
 from django.urls import reverse
@@ -121,7 +121,7 @@ def index(request, exec_id):
 
     # init()
     exec_name = "Name of Execution"
-    latest_task_list = Task.objects.all()
+    latest_task_list = Task.objects.filter(process_id=exec_id)
     # print(latest_task_list)
     # output = ', '.join([str(q.deadline) for q in latest_task_list])
     # return HttpResponse("This is supposed to be Task ID: %s" % exec_id)
@@ -137,17 +137,12 @@ def index(request, exec_id):
     return HttpResponse(template.render(context,request))
 
 def completeTask(request, exec_id, task_id):
-    # index(request, 2)
+    # Getting Current Task and Next Task Objects
     current_process = Process.objects.filter(id=exec_id)
     current_task = Task.objects.filter(id=task_id)
-    print(current_task)
+    # print(current_task)
     current_task_template = current_task.get().template
-    # print(current_task_template)
-    # print("LOL1")
     next_task_template = current_task_template.children.get()
-    # print(next_task_template)
-    # print("LOL2")
-    # current_task_template = TaskTemplate.objects.filter(name__in=[])
     next_task = Task.objects.filter(process_id=exec_id, template_id = next_task_template.id)
     print(next_task)
     current_task.update(status = "Completed")
