@@ -4,6 +4,8 @@ from django.http.response import HttpResponseNotAllowed, HttpResponseRedirect
 from django.urls import reverse
 from workflow_app.models import role
 from workflow_app.models import process_template
+from workflow_app.models import actor
+from workflow_app.models import task_template
 from workflow_app.models.actor import Actor
 from workflow_app.models.process_template import ProcessTemplate
 from workflow_app.models.task_template import TaskTemplate
@@ -140,15 +142,39 @@ def completeTask(request, exec_id, task_id):
     # Getting Current Task and Next Task Objects
     current_process = Process.objects.filter(id=exec_id)
     current_task = Task.objects.filter(id=task_id)
-    # print(current_task)
+    # print(current_task.get().id)
     current_task_template = current_task.get().template
     next_task_template = current_task_template.children.get()
     next_task = Task.objects.filter(process_id=exec_id, template_id = next_task_template.id)
-    print(next_task)
-    current_task.update(status = "Completed")
-    current_task.get().save()
-    print(current_task.get().status)
-    next_task.update(status = "Started")
-    next_task.get().save()
-    print(next_task.get().status)
-    return HttpResponseRedirect(reverse('executionindex', args=(exec_id,)))
+    # print(next_task)
+
+    # Add Current Actor the list of actors in current task
+    # 
+    if(current_task_template.all_or_any == True):
+        # to_check = Actor.objects.filter(roles__in=[current_task_template.role])
+        to_check = Actor.objects.filter(roles__id = current_task_template.role.id)
+        # print(to_check)
+        # print(current_task.filter(actors__id=))
+        # current_task.get().actors
+        # print(Counter(to_check))
+        print(current_task.get().id)
+        print(Actor.objects.filter(tasktemplate__id=10))
+        if(Counter(to_check)==Counter(Actor.objects.filter())):
+            # All Actors done, mark complete
+            current_task.update(status = "Completed")
+            current_task.get().save()
+            print(current_task.get().status)
+            next_task.update(status = "Started")
+            next_task.get().save()
+            print(next_task.get().status)
+            return HttpResponseRedirect(reverse('executionindex', args=(exec_id,)))
+        else:
+            return HttpResponseRedirect(reverse('executionindex', args=(exec_id,)))
+    else:
+        current_task.update(status = "Completed")
+        current_task.get().save()
+        print(current_task.get().status)
+        next_task.update(status = "Started")
+        next_task.get().save()
+        print(next_task.get().status)
+        return HttpResponseRedirect(reverse('executionindex', args=(exec_id,)))
