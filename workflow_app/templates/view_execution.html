@@ -85,6 +85,14 @@
                     Role: {{ task.template.role.name }}
                 </p>
                 <p class="card-text">
+                  Actors Completed: 
+                  {% for actor in task.actors.all %}
+                    {{ actor.name }}
+                  {% empty %}
+                    None
+                  {% endfor %}
+                </p>
+                <p class="card-text">
                     Process Template Name: {{ task.template.process_template.name }}
                 </p> 
                 <p class="card-text">
@@ -95,7 +103,7 @@
                 </p>
               </div>
               <div class="card-footer">
-                {% if task.status == "Started" %}
+                {% if task.status == "Started" and task.template.role in user_roles %}
                 <form action="{% url 'completing task' task.process.id task.id %}" method="post" class="post-form">
                     {% csrf_token %}
                     {% buttons %}

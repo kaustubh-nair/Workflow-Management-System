@@ -107,33 +107,26 @@ def init():
 
 
 def index(request, exec_id):
-    # procstemp = ProcessTemplate()
-    # procstemp.save()
-    # procs = Process() 
-    # procs.template = procstemp
-    # procs.save()
-    # tt = TaskTemplate()
-    # tt.all_or_any = False
-    # tt.save()
-    # t1 = Task()
-    # t1.deadline = datetime.now()
-    # t1.template = tt
-    # t1.process = procs 
-    # t1.save()
-
-    # init()
     exec_name = "Name of Execution"
-    latest_task_list = Task.objects.filter(process_id=exec_id)
-    # print(latest_task_list)
-    # output = ', '.join([str(q.deadline) for q in latest_task_list])
-    # return HttpResponse("This is supposed to be Task ID: %s" % exec_id)
+    task_list = Task.objects.filter(process_id=exec_id)
+    actor_name_list = []
+    for task in task_list:
+        actor_list = Actor.objects.filter(task__id=task.id)
+        for actor in actor_list:
+            actor_name_list.append(actor.name)
+    
+    current_user = Actor.objects.filter(name=request.user.get_username())
+    # print(Role.objects.filter(actor__id=current_user.get().id))
+    user_roles = Role.objects.filter(actor__id=current_user.get().id)
+    print(user_roles)
+
     template = loader.get_template('view_execution.html')
     collapse_show = "collapse show"
     collapse = "collapse"
     context = {
         'exec_name' : exec_name,
-        'task_list' : latest_task_list,
-        'latest_task_list' : latest_task_list,
+        'task_list' : task_list,
+        'user_roles' : user_roles,
     }
     # return HttpResponse(output)
     return HttpResponse(template.render(context,request))
@@ -147,6 +140,11 @@ def completeTask(request, exec_id, task_id):
     next_task_template = current_task_template.children.get()
     next_task = Task.objects.filter(process_id=exec_id, template_id = next_task_template.id)
     # print(next_task)
+    
+    # print(current_task_template.role.name)
+    
+    # return HttpResponseRedirect(reverse('executionindex', args=(exec_id,)))
+    
 
     # Add Current Actor the list of actors in current task
     # 
@@ -158,23 +156,51 @@ def completeTask(request, exec_id, task_id):
         # current_task.get().actors
         # print(Counter(to_check))
         print(current_task.get().id)
-        print(Actor.objects.filter(tasktemplate__id=10))
-        if(Counter(to_check)==Counter(Actor.objects.filter())):
+        l=range(1000)
+        print(Actor.objects.filter(task__id=current_task.get().id))
+        if(Counter(to_check)==Counter(Actor.objects.filter(task__id=current_task.get().id))):
             # All Actors done, mark complete
+            action_user = Actor.objects.filter(name=request.user.get_username())
+            current_task.get().actors.add(action_user.get())
+            current_task.get().save()
+
             current_task.update(status = "Completed")
             current_task.get().save()
+
             print(current_task.get().status)
             next_task.update(status = "Started")
             next_task.get().save()
             print(next_task.get().status)
+
+            
             return HttpResponseRedirect(reverse('executionindex', args=(exec_id,)))
         else:
+            action_user = Actor.objects.filter(name=request.user.get_username())
+            current_task.get().actors.add(action_user.get())
+            current_task.get().save()
+
+            if(Counter(to_check)==Counter(Actor.objects.filter(task__id=current_task.get().id))):
+                current_task.update(status = "Completed")
+                current_task.get().save()
+
+                print(current_task.get().status)
+                next_task.update(status = "Started")
+                next_task.get().save()
+                print(next_task.get().status)
+
             return HttpResponseRedirect(reverse('executionindex', args=(exec_id,)))
     else:
+        action_user = Actor.objects.filter(name=request.user.get_username())
+        current_task.get().actors.add(action_user.get())
+        current_task.get().save()
+
         current_task.update(status = "Completed")
         current_task.get().save()
         print(current_task.get().status)
+
         next_task.update(status = "Started")
         next_task.get().save()
         print(next_task.get().status)
+
+        
         return HttpResponseRedirect(reverse('executionindex', args=(exec_id,)))
