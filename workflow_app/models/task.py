@@ -14,6 +14,7 @@ class Task(models.Model):
     actors = models.ManyToManyField(Actor)
 
     @staticmethod
-    def save_tasks(tasks):
+    def save_tasks(tasks, process_id):
+        tasks['name'] = tasks['name'][1:]
         for i in range(len(tasks['name'])):
-            Task.objects.create(status=tasks['new_status_state'][i], deadline=datetime.strptime(tasks['deadline'][i], '%Y-%m-%d') )
+            Task.objects.create(status=tasks['new_status_state'][i], deadline=datetime.strptime(tasks['date'][i], '%Y-%m-%d'), template_id=tasks['task_id'][i],process_id=process_id)

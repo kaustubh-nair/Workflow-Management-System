@@ -19,6 +19,7 @@
 
 <form method="post" class="post-form">
     {% csrf_token %}
+    <input name="process_template_id" type="hidden" value={{process_template_id}}>
     {% for field in form.visible_fields %}
     {% if field.name == 'name'%}
     Name
@@ -48,7 +49,11 @@
     </tr>
     <tr>
     {% for k, v in template.items %}
-        {% if k == 'name' or k == 'role' or k == 'description' %}
+
+    {% if k == 'id' %}
+    <input name="task_id" type="hidden" value={{v}}>
+    {% endif %}
+    {% if k == 'name' or k == 'role' or k == 'description' %}
         <td>
               <input style="color: #000000; background: #ffffff; border-style: none;" type="text" id="{{task_name}}" name="{{k}}" value="{{v}}" readonly="readonly">
         </td>
