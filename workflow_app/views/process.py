@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from datetime import datetime
 
-from ..models import ProcessTemplate, TaskTemplate, Role
+from ..models import ProcessTemplate, TaskTemplate, Role, Task
 from .process_form import ProcessForm
 
 def create(request):
@@ -10,8 +10,8 @@ def create(request):
     context = {}
 
     if request.method == 'POST':
-        print("POST")
-        print(request.POST)
+        Task.save_tasks(dict(request.POST))
+        messages.append({'type': 'success', 'message': 'Process created successfully'})
     else:
         request_body = dict(request.GET)
         process_template_id = request_body['id'][0]
