@@ -11,6 +11,7 @@ def create(request):
 
     if request.method == 'POST':
         print("POST")
+        print(request.POST)
     else:
         request_body = dict(request.GET)
         process_template_id = request_body['id'][0]

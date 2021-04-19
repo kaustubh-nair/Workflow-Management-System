@@ -50,24 +50,23 @@
     {% for k, v in template.items %}
         {% if k == 'name' or k == 'role' or k == 'description' %}
         <td>
-            {{ v }}
+              <input style="color: #000000; background: #ffffff; border-style: none;" type="text" id="{{task_name}}" name="{{k}}" value="{{v}}" readonly="readonly">
         </td>
     {% endif %}
     {% endfor %}
       <td><input type="date"  ></td>
-      <td><input  ></td>
-    {% for field in form.visible_fields %}
-    {% if field.name == 'actors' %}
+    {% for k, v in template.items %}
+    {% if k == 'status_states'%}
         <td>
-        <select id="new_task_role" name="new_task_role">
-            {% for choice in field.field.choices %}
+        <select id="new_status_state" name="new_status_state">
+            {% for choice in v|parse_csv %}
             {{choice}}
             <option value="{{choice}}">{{choice}}</option>
             {% endfor %}
         </select>
         </td>
         {% endif %}
-    {% endfor %}
+        {% endfor %}
     </tr>
     {% endfor %}
 

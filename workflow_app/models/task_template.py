@@ -13,6 +13,7 @@ class TaskTemplate(models.Model):
     process_template = models.ForeignKey(ProcessTemplate, on_delete=PROTECT)
     is_first_task = models.BooleanField(default=False)
     children = models.ManyToManyField("TaskTemplate")
+    status_states = models.CharField(max_length=10000, default='')
 
     @staticmethod
     def build_tasks(request):
@@ -26,7 +27,7 @@ class TaskTemplate(models.Model):
                 if task_number not in tasks:
                     tasks[task_number] = {}
 
-                if keyword in ['name', 'description', 'all_or_any', 'choice', 'role']:
+                if keyword in ['name', 'description', 'all_or_any', 'choice', 'role', 'status_states']:
                     tasks[task_number][keyword] = v[0]
         return tasks
 
@@ -36,7 +37,8 @@ class TaskTemplate(models.Model):
         for k,v in request.items():
             if (k.startswith('new_task')):
                 keyword = k[9:]
-                if keyword in ['name', 'description', 'all_or_any', 'choice', 'role']:
+                print(keyword)
+                if keyword in ['name', 'description', 'all_or_any', 'choice', 'role', 'status_states']:
                     task[keyword] = v[0]
 
         index = [max(tasks.keys())+1 if tasks.keys() else 1][0]
