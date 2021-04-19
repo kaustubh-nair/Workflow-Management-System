@@ -1,11 +1,18 @@
+<<<<<<< HEAD
 from typing import Counter, Reversible
+=======
+from typing import Reversible
+>>>>>>> 7c0cffb3efc9aa06015f19f9bbe087d5d294d20d
 from django import template
 from django.http.response import HttpResponseNotAllowed, HttpResponseRedirect
 from django.urls import reverse
 from workflow_app.models import role
 from workflow_app.models import process_template
+<<<<<<< HEAD
 from workflow_app.models import actor
 from workflow_app.models import task_template
+=======
+>>>>>>> 7c0cffb3efc9aa06015f19f9bbe087d5d294d20d
 from workflow_app.models.actor import Actor
 from workflow_app.models.process_template import ProcessTemplate
 from workflow_app.models.task_template import TaskTemplate
@@ -107,6 +114,7 @@ def init():
 
 
 def index(request, exec_id):
+<<<<<<< HEAD
     exec_name = "Name of Execution"
     task_list = Task.objects.filter(process_id=exec_id)
     actor_name_list = []
@@ -120,6 +128,28 @@ def index(request, exec_id):
     user_roles = Role.objects.filter(actor__id=current_user.get().id)
     print(user_roles)
 
+=======
+    # procstemp = ProcessTemplate()
+    # procstemp.save()
+    # procs = Process() 
+    # procs.template = procstemp
+    # procs.save()
+    # tt = TaskTemplate()
+    # tt.all_or_any = False
+    # tt.save()
+    # t1 = Task()
+    # t1.deadline = datetime.now()
+    # t1.template = tt
+    # t1.process = procs 
+    # t1.save()
+
+    # init()
+    exec_name = "Name of Execution"
+    latest_task_list = Task.objects.all()
+    # print(latest_task_list)
+    # output = ', '.join([str(q.deadline) for q in latest_task_list])
+    # return HttpResponse("This is supposed to be Task ID: %s" % exec_id)
+>>>>>>> 7c0cffb3efc9aa06015f19f9bbe087d5d294d20d
     template = loader.get_template('view_execution.html')
     collapse_show = "collapse show"
     collapse = "collapse"
