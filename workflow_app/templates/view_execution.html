@@ -123,7 +123,11 @@
     <div class="col-md-5">
       <h2>Execution: {{exec_name}}</h2>
       <p>Details about Execution</p>
-      <button type="submit" class="btn btn-danger">Delete Execution</button>
+      Current Role:
+      {% for role in user_roles%}
+      <p> {{ role.name }} </p>
+      {% endfor %}
+      <button type="submit" class="btn btn-danger">Stop Execution</button>
     </div>
   </div>
 </div>
