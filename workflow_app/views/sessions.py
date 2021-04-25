@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.views.generic import TemplateView
 from django.views import generic
 from django.urls import reverse_lazy, reverse
-from ..models import ProcessTemplate
+from ..models import ProcessTemplate, Process
 
 class SignUpView(generic.CreateView):
     form_class = UserCreationForm
@@ -19,6 +19,14 @@ def home(request):
         return HttpResponseRedirect(reverse('login'))
 
 def viewdefs(request):
-    pt_list = ProcessTemplate.objects.all()
-    context = {'pt_list' : pt_list}
+    def_list = ProcessTemplate.objects.all()
+    context = {'def_list' : def_list}
     return render(request, 'viewdefinitions.html', context)
+
+def viewexecs(request, def_id):
+    exec_list = Process.objects.filter(template__id = def_id)
+    context = {'exec_list' : exec_list}
+    return render(request, 'viewexecutions.html', context)
+
+def index(request, exec_id):
+    return HttpResponse("Hi")

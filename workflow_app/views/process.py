@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from datetime import datetime
-
 from ..models import ProcessTemplate, TaskTemplate, Role, Task, Process
 from .process_form import ProcessForm
 
