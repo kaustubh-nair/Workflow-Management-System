@@ -79,39 +79,27 @@
               <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Name</th>
-                <th scope="col">Description</th>
                 <th scope="col">Creator</th>
-                <th scope="col">Executions</th>
+                <th scope="col">Date Of Creation</th>
               </tr>
             </thead>
-            {% if def_list %}
+            {% if exec_list %}
             <tbody>
-              {% for def in def_list %}
+              {% for exec in exec_list %}
               <tr>
                 <th scope="row">{{ forloop.counter }}</th>
-                <td><a href="#">{{ def.name }}</a></td>
-                <td>{{ def.description }}</td>
-                <td>{{ def.creator.name }}</td>
+                <td><a href="#">{{ exec.name }}</a></td>
+                <td>{{ exec.creator.name }}</td>
+                <td>{{ exec.dateOfCreation }}</td>
                 <td>
                   <form
-                    action="{% url 'viewdefs' %}"
+                    action="{% url 'executionindex' exec.id %}"
                     method="post"
                     class="post-form"
                   >
                     {% csrf_token %} {% buttons %}
                     <button type="submit" class="btn btn-success btn-xs">
-                      Create New Execution
-                    </button>
-                    {% endbuttons %}
-                  </form>
-                  <form
-                    action="{% url 'viewexecs' def.id %}"
-                    method="post"
-                    class="post-form"
-                  >
-                    {% csrf_token %} {% buttons %}
-                    <button type="submit" class="btn btn-primary btn-xs">
-                      View All Executions
+                      Execute
                     </button>
                     {% endbuttons %}
                   </form>
@@ -121,17 +109,6 @@
             </tbody>
             {% endif %}
           </table>
-          <form
-            action="{% url 'viewdefs' %}"
-            method="post"
-            class="post-form"
-          >
-            {% csrf_token %} {% buttons %}
-            <button type="submit" class="btn btn-success btn-lg btn-block">
-              Create New Workflow
-            </button>
-            {% endbuttons %}
-          </form>
         </div>
       </div>
     </div>
