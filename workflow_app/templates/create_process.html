@@ -1,0 +1,83 @@
+{% include "./base.html" %}
+
+{% load bootstrap4 %}
+{% load extra_tags %}
+
+<br>
+<br>
+<br>
+<h1> Create a new {{template}} process </h1>
+<br>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li class="alert alert-success {{ message.type }} " > {{ message.message }} </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<form method="post" class="post-form">
+    {% csrf_token %}
+    <input name="process_template_id" type="hidden" value={{process_template_id}}>
+    {% for field in form.visible_fields %}
+    {% if field.name == 'name'%}
+    Name
+    {{ field }}
+    {% endif %}
+    {% endfor %}
+    <br>
+    <br>
+    <table border="1">
+    {% for template in task_templates %}
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Description
+        </th>
+        <th>
+            Role
+        </th>
+        <th>
+            Deadline
+        </th>
+        <th>
+            Status
+        </th>
+    </tr>
+    <tr>
+    {% for k, v in template.items %}
+
+    {% if k == 'id' %}
+    <input name="task_id" type="hidden" value={{v}}>
+    {% endif %}
+    {% if k == 'name' or k == 'role' or k == 'description' %}
+        <td>
+              <input style="color: #000000; background: #ffffff; border-style: none;" type="text" id="{{task_name}}" name="{{k}}" value="{{v}}" readonly="readonly">
+        </td>
+    {% endif %}
+    {% endfor %}
+      <td><input name="date" type="date"  ></td>
+    {% for k, v in template.items %}
+    {% if k == 'status_states'%}
+        <td>
+        <select id="new_status_state" name="new_status_state">
+            {% for choice in v|parse_csv %}
+            {{choice}}
+            <option value="{{choice}}">{{choice}}</option>
+            {% endfor %}
+        </select>
+        </td>
+        {% endif %}
+        {% endfor %}
+    </tr>
+    {% endfor %}
+
+  </table>
+    {% buttons %}
+        <button type="submit" name="action" value="save" class="btn btn-success">Save</button>
+    {% endbuttons %}
+</form>
+</div> 

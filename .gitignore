@@ -1,4 +1,5 @@
 __pycache__/
 workflow_app/migrations/
+workflow_app/templates/workflow_app/working.html
 env/
  *.pyc
