@@ -13,6 +13,8 @@ from django.shortcuts import render
 from datetime import date, datetime, timezone
 from django.http import HttpResponse
 from django.template import loader
+from django.contrib.auth.decorators import login_required
+from workflow_app.templatetags.extra_tags import *
 
 from ..models import Role
 from ..models import Task
@@ -105,20 +107,23 @@ def init():
     et214.save()
 
 
-
+@login_required
 def index(request, exec_id):
     exec_name = "Name of Execution"
     task_list = Task.objects.filter(process_id=exec_id)
-    actor_name_list = []
+    total_action_list = []
     for task in task_list:
-        actor_list = Actor.objects.filter(task__id=task.id)
-        for actor in actor_list:
-            actor_name_list.append(actor.name)
+        task_template = task.template
+        task_template_actions = task_template.status_states
+        action_list = parse_csv(task_template_actions)
+        total_action_list.append(action_list)
+    
+    print(total_action_list)
     
     current_user = Actor.objects.filter(name=request.user.get_username())
     # print(Role.objects.filter(actor__id=current_user.get().id))
     user_roles = Role.objects.filter(actor__id=current_user.get().id)
-    print(user_roles)
+    # print(user_roles)
 
     template = loader.get_template('view_execution.html')
     collapse_show = "collapse show"
@@ -127,80 +132,74 @@ def index(request, exec_id):
         'exec_name' : exec_name,
         'task_list' : task_list,
         'user_roles' : user_roles,
+        'total_action_list': total_action_list,
     }
     # return HttpResponse(output)
     return HttpResponse(template.render(context,request))
 
-def completeTask(request, exec_id, task_id):
+@login_required
+def completeTask(request, exec_id, task_id, action):
     # Getting Current Task and Next Task Objects
     current_process = Process.objects.filter(id=exec_id)
     current_task = Task.objects.filter(id=task_id)
-    # print(current_task.get().id)
     current_task_template = current_task.get().template
+    # current_task_template_actions = current_task_template.status_states
+    # print(parse_csv(current_task_template_actions))
+    # return HttpResponseRedirect(reverse('executionindex', args=(exec_id,)))
+
     next_task_template = current_task_template.children.get()
     next_task = Task.objects.filter(process_id=exec_id, template_id = next_task_template.id)
-    # print(next_task)
-    
-    # print(current_task_template.role.name)
-    
-    # return HttpResponseRedirect(reverse('executionindex', args=(exec_id,)))
-    
 
-    # Add Current Actor the list of actors in current task
-    # 
+    # Add Current Actor the list of actors in current task 
     if(current_task_template.all_or_any == True):
-        # to_check = Actor.objects.filter(roles__in=[current_task_template.role])
         to_check = Actor.objects.filter(roles__id = current_task_template.role.id)
-        # print(to_check)
-        # print(current_task.filter(actors__id=))
-        # current_task.get().actors
-        # print(Counter(to_check))
-        print(current_task.get().id)
-        l=range(1000)
-        print(Actor.objects.filter(task__id=current_task.get().id))
         if(Counter(to_check)==Counter(Actor.objects.filter(task__id=current_task.get().id))):
             # All Actors done, mark complete
             action_user = Actor.objects.filter(name=request.user.get_username())
             current_task.get().actors.add(action_user.get())
-            current_task.get().save()
+            # current_task.get().save()
+            out = current_task.get().output + action_user.get().name + ":" + action + ";"
+            print(out)
+            current_task.update(output = out)
+            # current_task.get().save()
 
             current_task.update(status = "Completed")
             current_task.get().save()
 
-            print(current_task.get().status)
             next_task.update(status = "Started")
             next_task.get().save()
-            print(next_task.get().status)
-
             
             return HttpResponseRedirect(reverse('executionindex', args=(exec_id,)))
         else:
             action_user = Actor.objects.filter(name=request.user.get_username())
             current_task.get().actors.add(action_user.get())
+            # current_task.get().save()
+            out = current_task.get().output + action_user.get().name + ":" + action + ";"
+            print(out)
+            current_task.update(output = out)            
             current_task.get().save()
 
             if(Counter(to_check)==Counter(Actor.objects.filter(task__id=current_task.get().id))):
                 current_task.update(status = "Completed")
                 current_task.get().save()
 
-                print(current_task.get().status)
                 next_task.update(status = "Started")
                 next_task.get().save()
-                print(next_task.get().status)
 
             return HttpResponseRedirect(reverse('executionindex', args=(exec_id,)))
     else:
         action_user = Actor.objects.filter(name=request.user.get_username())
         current_task.get().actors.add(action_user.get())
-        current_task.get().save()
+        # current_task.get().save()
+        out = current_task.get().output + action_user.get().name + ":" + action + ";"
+        print(out)
+        current_task.update(output = out)
+        # current_task.get().save()
 
         current_task.update(status = "Completed")
         current_task.get().save()
-        print(current_task.get().status)
 
         next_task.update(status = "Started")
         next_task.get().save()
-        print(next_task.get().status)
-
         
         return HttpResponseRedirect(reverse('executionindex', args=(exec_id,)))

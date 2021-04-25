@@ -1,5 +1,6 @@
 
 {% load bootstrap4 %}
+{% load extra_tags %}
 {% include "./base.html" %}
 <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
@@ -101,15 +102,20 @@
                 <p class="card-text">
                   Deadline: {{task.deadline}}
                 </p>
+                <p class="card-text">
+                  Current Output: {{task.output}}
+                </p>
               </div>
               <div class="card-footer">
                 {% if task.status == "Started" and task.template.role in user_roles %}
-                <form action="{% url 'completing task' task.process.id task.id %}" method="post" class="post-form">
-                    {% csrf_token %}
-                    {% buttons %}
-                    <button type="submit" class="btn btn-success">Complete Task</button>
-                    {% endbuttons %}
-                </form>
+                  {% for action in task.template.status_states|parse_csv %}
+                    <form action="{% url 'completing task' task.process.id task.id action %}" method="post" class="post-form">
+                        {% csrf_token %}
+                        {% buttons %}
+                          <button type="submit" class="btn btn-success">{{ action }}</button>
+                        {% endbuttons %}
+                    </form>
+                  {% endfor %}
                 {% endif %}
                 <!-- <button type="button" class="btn btn-success btn-xs" onclick="showAlert()">
                   Mark As Completed
