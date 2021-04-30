@@ -60,7 +60,7 @@
   <nav class="navbar navbar-expand-md navbarcolor">
     <div class="container-fluid">
       <a class="navbar-link" href="{% url 'viewdefs' user.username %}">Workflows</a>
-      <a class="navbar-link" href="#">My Executions</a>
+      <a class="navbar-link" href="{% url 'myexecutions' user.username %}">My Executions</a>
       <button
         class="navbar-toggler"
         type="button"

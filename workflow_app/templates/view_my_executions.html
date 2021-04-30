@@ -37,19 +37,8 @@
       <div class="row">
         <div class="col-md-12">
           <div class="page-header text-center">
-            <h2> Template Name: {{ process_template.name }}</h2>
-            <h4> Created By: {{ process_template.creator.name }}</h4>
           </div>
-          <form
-          action="{% url 'create_execution' process_template.id %}"
-          method="GET"
-          >
-            {% csrf_token %} {% buttons %}
-            <button type="submit" class="btn btn-success btn-xs">
-              Create New Execution
-            </button>
-            {% endbuttons %}
-          </form>
+          <h2>Pending Executions</h2>
           <table class="table">
             <thead>
               <tr>
@@ -59,9 +48,45 @@
                 <th scope="col">Date Of Creation</th>
               </tr>
             </thead>
-            {% if exec_list %}
+            {% if pending_execs %}
             <tbody>
-              {% for exec in exec_list %}
+              {% for exec in pending_execs %}
+              <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td><a href="#">{{ exec.name }}</a></td>
+                <td>{{ exec.creator.name }}</td>
+                <td>{{ exec.dateOfCreation }}</td>
+                <td>
+                  <form
+                    action="{% url 'executionindex' exec.id %}"
+                    method="post"
+                    class="post-form"
+                  >
+                    {% csrf_token %} {% buttons %}
+                    <button type="submit" class="btn btn-success btn-xs">
+                      View Execution
+                    </button>
+                    {% endbuttons %}
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            {% endif %}
+          </table>
+          <h2>Available Executions</h2>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Creator</th>
+                <th scope="col">Date Of Creation</th>
+              </tr>
+            </thead>
+            {% if available_execs %}
+            <tbody>
+              {% for exec in available_execs %}
               <tr>
                 <th scope="row">{{ forloop.counter }}</th>
                 <td><a href="#">{{ exec.name }}</a></td>
