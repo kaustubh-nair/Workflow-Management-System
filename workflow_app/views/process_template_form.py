@@ -41,7 +41,6 @@ class ProcessTemplateForm(forms.Form):
 
     def save(self):
         process_template = ProcessTemplate.objects.create(name=self.name, description=self.description, creator=Actor.objects.first(), dateOfCreation=date.today())
-        print(self.tasks)
-        for _, task in self.tasks.items():
-            print(task)
-            TaskTemplate.objects.create(name=task['name'], description=task['description'], role_id=1, process_template_id=process_template.id, status_states=task['status_states'])
+        for number, task in self.tasks.items():
+                print(number)
+                TaskTemplate.objects.create(name=task['name'], description=task['description'], role_id=1, process_template_id=process_template.id, status_states=task['status_states'])
