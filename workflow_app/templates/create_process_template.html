@@ -67,17 +67,18 @@
 
             {% endfor %}
     
+            <br>
+    {% buttons %}
+        <button type="submit" class="btn btn-primary" name="action" value="add_task">Add new task</button>
+        <button type="submit" name="action" value="save" class="btn btn-success">Save</button>
+    {% endbuttons %}
         </div>
-        <div>
-            <input  type="text" >
-        </div>
-    </div>
-
-  <h4>Tasks</h4>
+            <div class="task-container">
+  <h4 class="text-container">Tasks</h4>
   <table >
       {% for number, task in tasks.items %}
       <tr>
-      <table border="1">
+      <table border="1" bordercolor="#9c9c9c">
           Task {{ number }}
           {% for name, value in task.items %}
           <tr>
@@ -97,12 +98,11 @@
         <td>
   <br>
   <br>
-    {% buttons %}
-        <button type="submit" class="btn btn-primary" name="action" value="add_task">Add new task</button>
-        <button type="submit" name="action" value="save" class="btn btn-success">Save</button>
-    {% endbuttons %}
             
         </td>
     </table>
+        </div>
+    </div>
+
 </form>
 </div> 
