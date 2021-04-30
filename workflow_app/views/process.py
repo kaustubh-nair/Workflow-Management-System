@@ -94,7 +94,7 @@ def create_template(request):
             form = ProcessTemplateForm()
             tasks = {}
             messages.append({'type': 'success', 'message': 'Process template created successfully'})
-            return redirect('/', messages=messages)
+            return redirect('/')
     else:
         tasks = TaskTemplate.build_tasks(dict(request.GET))
 
