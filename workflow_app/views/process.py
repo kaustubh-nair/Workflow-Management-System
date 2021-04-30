@@ -38,7 +38,7 @@ def edit_task(request, task_template_id):
     context = {'id': task_template.process_template_id, 'form': form}
     return render(request, 'edit_task_template.html', context)
 
-def create(request, tasks):
+def create(request):
     messages=[]
     form = ProcessForm()
     context = {}
