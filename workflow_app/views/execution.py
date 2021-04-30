@@ -106,6 +106,25 @@ def init():
     et214 = Task(output = "Output of Task 4 Execution 1", deadline = deadlinee1, status = "Not Started", template = tt24, process = e21)
     et214.save()
 
+@login_required
+def create_exec(request, template_id):
+    workflow_template = ProcessTemplate.objects.filter(id=template_id).get()
+    current_user = Actor.objects.filter(name = request.user.username).get()
+    workflow = Process(name = "Execution "+ workflow_template.name, template = workflow_template, creator = current_user, dateOfCreation = datetime.now())
+    workflow.save()
+    first = True
+    task_templates = TaskTemplate.objects.filter(process_template = workflow_template)
+    for task_template in task_templates:
+        if first:
+            new_task = Task(template = task_template, process = workflow, deadline = datetime.now(), status = "Started")
+            first = False
+        else:
+            new_task = Task(template = task_template, process = workflow, deadline = datetime.now(), status = "Not Started")
+
+        new_task.save()
+
+    # return HttpResponse("NEW PAGE")
+    return HttpResponseRedirect(reverse('executionindex', args=(workflow.id,)))
 
 @login_required
 def index(request, exec_id):

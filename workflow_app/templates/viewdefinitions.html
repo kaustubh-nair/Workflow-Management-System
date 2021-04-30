@@ -94,9 +94,8 @@
                 <td>{{ def.creator.name }}</td>
                 <td>
                   <form
-                    action="{% url 'viewdefs' %}"
-                    method="post"
-                    class="post-form"
+                    action="{% url 'create_execution' def.id %}"
+                    method="GET"
                   >
                     {% csrf_token %} {% buttons %}
                     <button type="submit" class="btn btn-success btn-xs">
@@ -106,8 +105,7 @@
                   </form>
                   <form
                     action="{% url 'viewexecs' def.id %}"
-                    method="post"
-                    class="post-form"
+                    method="GET"
                   >
                     {% csrf_token %} {% buttons %}
                     <button type="submit" class="btn btn-primary btn-xs">
