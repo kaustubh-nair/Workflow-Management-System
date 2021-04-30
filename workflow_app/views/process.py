@@ -3,8 +3,22 @@ from django.template import loader
 from datetime import datetime
 from ..models import ProcessTemplate, TaskTemplate, Role, Task, Process
 from .process_form import ProcessForm
-from .process_template_form import ProcessTemplateForm
+from .process_template_form import ProcessTemplateForm, EditProcessTemplateForm
 from .task_template_form import TaskTemplateForm
+
+def edit(request, process_id):
+    process_template = ProcessTemplate.objects.filter(id=process_id).first()
+    if request.method == 'POST':
+        req = dict(request.POST)
+        process_template.name = req['name'][0]
+        process_template.description = req['description'][0]
+        process_template.save()
+    form = EditProcessTemplateForm(initial={'name': process_template.name, 'description': process_template.description})
+    task_templates = TaskTemplate.objects.filter(process_template=process_template)
+    task_templates = [(t.id, t.name) for t in task_templates]
+    context = {'form': form, 'tasks': task_templates}
+
+    return render(request, 'edit_process_template.html', context)
 
 def edit_task(request, task_template_id):
     messages=[]
@@ -13,7 +27,7 @@ def edit_task(request, task_template_id):
         req = dict(request.POST)
         task_template.name = req['name'][0]
         task_template.description = req['description'][0]
-        task_template.all_or_any = [True if req['all_or_any'][0] == 'on' else False][0]
+        task_template.all_or_any = [True if 'all_or_any' in req else False][0]
         task_template.status_states = req['status_states'][0]
         task_template.role_id = int(req['role'][0])
         task_template.save()
@@ -21,7 +35,7 @@ def edit_task(request, task_template_id):
     role = task_template.role
     role=(role.id, role.name)
     form = TaskTemplateForm(initial={'name': task_template.name, 'all_or_any': task_template.all_or_any, 'role': role, 'description': task_template.description, 'status_states': task_template.status_states })
-    context = {'form': form}
+    context = {'id': task_template.process_template_id, 'form': form}
     return render(request, 'edit_task_template.html', context)
 
 def create(request, tasks):

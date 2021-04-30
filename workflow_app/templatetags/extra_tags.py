@@ -14,3 +14,12 @@ def humanreadable(text):
 @register.filter
 def parse_csv(text):
     return [ x.strip() for x in text.split(',')]
+
+@register.filter
+def get_task_edit_url(id):
+    return "/task/template/" + str(id) + "/edit"
+
+@register.filter
+def get_process_edit_url(id):
+    return "/process/template/" + str(id) + "/edit"
+

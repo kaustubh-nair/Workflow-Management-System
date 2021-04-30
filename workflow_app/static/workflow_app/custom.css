@@ -49,3 +49,10 @@
 .task-attr {
     padding-left: 4vw;
 }
+
+.tasktable {
+    width: 100%;
+    padding-top: 9vh;
+    padding-left: 4vw;
+    padding-right 4vw;
+}

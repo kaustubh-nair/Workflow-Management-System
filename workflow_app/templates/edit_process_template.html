@@ -43,12 +43,8 @@
     </nav>
 
 <br>
-<h2 style="padding-left: 3vw">Edit Task template</h2>
+<h2 style="padding-left: 3vw">Edit Workflow definition</h2>
 <br>
-<div style="padding-left: 4vh; padding-bottom: 3vh">
-    <a class="btn btn-primary" href={{id|get_process_edit_url}}>&#8592; Go Back</a>
-    
-</div>
 
 <form method="POST">
     {% csrf_token %}
@@ -63,6 +59,20 @@
           {{ field.help_text }}
 </div>
     {% endfor %}
+    <div class="tasktable">
+    <table width="100%" padding="10px"  class="tasktable">
+        <th>Name</th>
+        <th>Edit</th>
+        {% for id, name in tasks %}
+        <tr>
+            <td>{{name}}</td>
+            <td>
+                <a class="btn btn-primary" href={{id|get_task_edit_url}}>Edit</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
     <div style="padding-left: 7vh">
         <button type="submit" class="btn btn-success">Save</button>
     </div>

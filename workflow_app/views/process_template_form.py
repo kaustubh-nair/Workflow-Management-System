@@ -3,6 +3,10 @@ from datetime import date
 
 from ..models import Actor, ProcessTemplate, TaskTemplate, Role
 
+class EditProcessTemplateForm(forms.Form):
+    name = forms.CharField(max_length=200, required=False)
+    description = forms.CharField(max_length=1000, required=False)
+
 class ProcessTemplateForm(forms.Form):
     name = forms.CharField(max_length=200, required=False)
     description = forms.CharField(max_length=1000, required=False)
