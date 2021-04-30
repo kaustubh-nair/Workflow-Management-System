@@ -43,9 +43,6 @@
         <th>
             Deadline
         </th>
-        <th>
-            Status
-        </th>
     </tr>
     <tr>
     {% for k, v in template.items %}
@@ -60,18 +57,6 @@
     {% endif %}
     {% endfor %}
       <td><input name="date" type="date"  ></td>
-    {% for k, v in template.items %}
-    {% if k == 'status_states'%}
-        <td>
-        <select id="new_status_state" name="new_status_state">
-            {% for choice in v|parse_csv %}
-            {{choice}}
-            <option value="{{choice}}">{{choice}}</option>
-            {% endfor %}
-        </select>
-        </td>
-        {% endif %}
-        {% endfor %}
     </tr>
     {% endfor %}
 

@@ -4,8 +4,6 @@
 {% load extra_tags %}
 
 <br>
-<br>
-<br>
 <h1> Create a process template</h1>
 <br>
 
@@ -18,25 +16,65 @@
 {% endif %}
 
 <form method="post" class="post-form">
-    {% csrf_token %}
-    <table border="0.6">
-    {% for field in form.visible_fields %}
-    {% if field.name == 'name' or field.name == 'description' %}
-      <tr>
-        <th>{{ field.label_tag }}</th>
-        <td>
-          {{ field }}
-          {{ field.help_text }}
-        </td>
-      </tr>
-    {% endif %}
-    {% endfor %}
-  </table>
-  <br>
-  <br>
+    <div class="process-container">
+        <div class="task-container">
+                {% csrf_token %}
+                {% for field in form.visible_fields %}
+                {% if field.name == 'name' or field.name == 'description' %}
+            <div class="attr-container">
+                <div>
+                    {{ field.label_tag }}
+                </div>
+                 <div>
+                     {{ field }}
+                 </div>
+                      {{ field.help_text }}
+            </div>
+                {% endif %}
+                {% endfor %}
+          <h4> Add new task </h4>
+            {% for field in form.visible_fields %}
+            {% if field.name != 'name' and field.name != 'description' and field.name != 'new_task_role' %}
+            <div class="attr-container">
+                <div>
+                    {% if field.name != "new_task_all_or_any" %}
+                        {{ field.label_tag }}
+                    {% else %}
+                        New task all actors?
+                    {% endif %}
+                </div>
+                <div>
+                {{ field }}
+                    
+                </div>
+                {{ field.help_text }}
+                
+            </div>
+            {% endif %}
+            {% if field.name == 'new_task_role' %}
+                    <div class="attr-container">
+                <label for="new_task_role"> New task role</label>
+                <select id="new_task_role" name="new_task_role">
+                    {% for choice in field.field.choices %}
+                    {{choice}}
+                    <option value="{{choice}}">{{choice}}</option>
+                    {% endfor %}
+                    
+                </select>
+                    </div>
+                    
+            {% endif %}
+
+            {% endfor %}
+    
+        </div>
+        <div>
+            <input  type="text" >
+        </div>
+    </div>
 
   <h4>Tasks</h4>
-  <table border="1">
+  <table >
       {% for number, task in tasks.items %}
       <tr>
       <table border="1">
@@ -54,44 +92,17 @@
       </tr>
       {% endfor %}
   </table>
-  <br>
-  <br>
-  <h4> New task </h4>
-  <table>
-    {% for field in form.visible_fields %}
-    {% if field.name != 'name' and field.name != 'description' and field.name != 'new_task_role' %}
-      <tr>
-        <th>{{ field.label_tag }}</th>
-        <td>
-          {{ field }}
-          {{ field.help_text }}
-        </td>
-      </tr>
-    {% endif %}
-    {% if field.name == 'new_task_role' %}
-    <tr>
-        <th>
-        <label for="new_task_role"> New task role</label>
-        </th>
-        <td>
-        <select id="new_task_role" name="new_task_role">
-            {% for choice in field.field.choices %}
-            {{choice}}
-            <option value="{{choice}}">{{choice}}</option>
-            {% endfor %}
-            
-        </select>
             
         </td>
-    </tr>
-    {% endif %}
-
-    {% endfor %}
-  </table>
-    
+        <td>
+  <br>
+  <br>
     {% buttons %}
         <button type="submit" class="btn btn-primary" name="action" value="add_task">Add new task</button>
         <button type="submit" name="action" value="save" class="btn btn-success">Save</button>
     {% endbuttons %}
+            
+        </td>
+    </table>
 </form>
 </div> 
