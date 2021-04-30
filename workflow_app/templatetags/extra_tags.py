@@ -23,3 +23,7 @@ def get_task_edit_url(id):
 def get_process_edit_url(id):
     return "/process/template/" + str(id) + "/edit"
 
+@register.filter
+def get_add_new_task_url(id):
+    return "/process/" + str(id) + "/task/add/"
+
