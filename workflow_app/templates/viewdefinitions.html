@@ -32,9 +32,60 @@
     ></script>
   </head>
   <body>
+    <nav class="navbar navbar-expand-md navbarcolor">
+      <div class="container-fluid">
+        <a class="navbar-link" href="{% url 'viewdefs' user.username %}">Workflows</a>
+        <a class="navbar-link" href="#">My Executions</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+          <ul class="nav-item ml-md-auto" style="list-style-type: none">
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                {{ user.username }}
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
+          {% if group == 'CU' %}
+          <form
+            action="{% url 'create_process_template' %}"
+            method="get"
+          >
+            {% csrf_token %} {% buttons %}
+            <button type="submit" class="btn btn-success btn-lg btn-block">
+              Create New Workflow
+            </button>
+            {% endbuttons %}
+          </form>
+          {% endif %}
           <table class="table">
             <thead>
               <tr>
@@ -50,12 +101,12 @@
               {% for def in def_list %}
               <tr>
                 <th scope="row">{{ forloop.counter }}</th>
-                <td><a href="#">{{ def.name }}</a></td>
+                <td><a href="{% url 'edit_process_template' def.id %}">{{ def.name }}</a></td>
                 <td>{{ def.description }}</td>
                 <td>{{ def.creator.name }}</td>
                 <td>
                   <form
-                    action="{% url 'viewdefs' %}"
+                    action="{% url 'viewdefs' user.username %}"
                     method="post"
                     class="post-form"
                   >
@@ -82,16 +133,6 @@
             </tbody>
             {% endif %}
           </table>
-          <form
-            action="{% url 'create_process_template' %}"
-            method="get"
-          >
-            {% csrf_token %} {% buttons %}
-            <button type="submit" class="btn btn-success btn-lg btn-block">
-              Create New Workflow
-            </button>
-            {% endbuttons %}
-          </form>
         </div>
       </div>
     </div>

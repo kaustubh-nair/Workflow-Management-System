@@ -4,7 +4,7 @@
 {% load extra_tags %}
     <nav class="navbar navbar-expand-md navbarcolor">
       <div class="container-fluid">
-        <a class="navbar-link" href="#">Workflows</a>
+        <a class="navbar-link" href="{% url 'viewdefs' user.username %}">Workflows</a>
         <a class="navbar-link" href="#">My Executions</a>
         <button
           class="navbar-toggler"

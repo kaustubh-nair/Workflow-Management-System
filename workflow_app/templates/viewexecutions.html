@@ -32,10 +32,10 @@
     ></script>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-md navbarcolor">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">Workflows</a>
-        <a class="navbar-brand" href="#">My Executions</a>
+        <a class="navbar-link" href="{% url 'viewdefs' user.username %}">Workflows</a>
+        <a class="navbar-link" href="#">My Executions</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -99,7 +99,7 @@
                   >
                     {% csrf_token %} {% buttons %}
                     <button type="submit" class="btn btn-success btn-xs">
-                      Execute
+                      View Execution
                     </button>
                     {% endbuttons %}
                   </form>
