@@ -2,11 +2,48 @@
 
 {% load bootstrap4 %}
 {% load extra_tags %}
+    <nav class="navbar navbar-expand-md navbarcolor">
+      <div class="container-fluid">
+        <a class="navbar-link" href="#">Workflows</a>
+        <a class="navbar-link" href="#">My Executions</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+          <ul class="nav-item ml-md-auto" style="list-style-type: none">
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                {{ user.username }}
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
 <br>
-<br>
-<br>
-<h1> Create a new {{template}} process </h1>
+<h2 style="padding-left: 3vw"> Create a new {{template}} execution </h2>
 <br>
 
 {% if messages %}
@@ -19,6 +56,7 @@
 
 <form method="post" class="post-form">
     {% csrf_token %}
+    <div class="process">
     <input name="process_template_id" type="hidden" value={{process_template_id}}>
     {% for field in form.visible_fields %}
     {% if field.name == 'name'%}
@@ -26,6 +64,7 @@
     {{ field }}
     {% endif %}
     {% endfor %}
+        
     <br>
     <br>
     <table border="1">
@@ -61,8 +100,10 @@
     {% endfor %}
 
   </table>
+  <br>
     {% buttons %}
         <button type="submit" name="action" value="save" class="btn btn-success">Save</button>
     {% endbuttons %}
+    </div>
 </form>
 </div> 
