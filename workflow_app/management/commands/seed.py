@@ -28,7 +28,7 @@ def init(self):
     user.set_password("Actor1Password")
     user.save()
     user = User.objects.create(username="Actor2")
-    user.set_password("Actor3Password")
+    user.set_password("Actor2Password")
     user.save()
     user = User.objects.create(username="Actor3")
     user.set_password("Actor3Password")
