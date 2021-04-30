@@ -138,6 +138,9 @@
       <form action="{% url 'delete_execution' exec_obj.id %}" method="GET">
         <button type="submit" class="btn btn-danger">Delete Execution</button>
       </form>
+      <form action="{% url 'viewexecs' exec_obj.template.id %}" method="GET">
+        <button type="submit" class="btn btn-primary">View Executions on Same Template</button>
+      </form>
     </div>
   </div>
 </div>
