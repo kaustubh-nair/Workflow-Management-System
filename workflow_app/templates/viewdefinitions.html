@@ -122,9 +122,8 @@
             {% endif %}
           </table>
           <form
-            action="{% url 'viewdefs' %}"
-            method="post"
-            class="post-form"
+            action="{% url 'create_process_template' %}"
+            method="get"
           >
             {% csrf_token %} {% buttons %}
             <button type="submit" class="btn btn-success btn-lg btn-block">
