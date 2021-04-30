@@ -54,7 +54,7 @@
 </nav>
 <div class="container-fluid">
   <div class="page-header">
-    <h1> Execution Name: {{ exec_name }}</h1>
+    <h1> Execution Name: {{ exec_obj.name }}</h1>
   </div>
   <div class="row">
     <div class="col-md-7">
@@ -128,13 +128,16 @@
       {% endfor %}
     </div>
     <div class="col-md-5">
-      <h2>Execution: {{exec_name}}</h2>
-      <p>Details about Execution</p>
+      <h2>Execution: {{exec_obj.name}}</h2>
+      <p>Creator: {{exec_obj.creator.name}}</p>
+      <p>Date Of Creation: {{exec_obj.dateOfCreation | date:"D d M Y" }}</p>
       Current Role:
       {% for role in user_roles%}
       <p> {{ role.name }} </p>
       {% endfor %}
-      <button type="submit" class="btn btn-danger">Stop Execution</button>
+      <form action="{% url 'delete_execution' exec_obj.id %}" method="GET">
+        <button type="submit" class="btn btn-danger">Delete Execution</button>
+      </form>
     </div>
   </div>
 </div>
