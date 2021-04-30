@@ -1,3 +1,16 @@
+.navbar-link {
+  background-color: #343a40;
+  text-decoration: none;
+  color: #f8f9fa;
+  padding-left: 1.5vh;
+}
+
+
+.navbarcolor {
+  background-color: #343a40;
+  color: #f8f9fa;
+}
+
 .attr-container {
     display: flex;
     flex-direction: row;
