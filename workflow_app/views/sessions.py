@@ -103,21 +103,24 @@ def myexecutions(request, name):
             if ttemp.role in Actor.objects.get(name=name).roles.all():
                 flag_outer = 1
                 break
-        print(flag_outer)
+        # print(flag_outer)
         if flag_outer:
             flag_inner = 0
             all_processes = Process.objects.filter(template=ptemp)
             for process in all_processes:
                 all_tasks = Task.objects.filter(process=process)
                 for task in all_tasks:
-                    if task.status == "Started" and task.template.role in Actor.objects.get(name=name).roles.all():
+                    # print(task.template.role)
+                    # print(Actor.objects.get(name=name).roles.all())
+                    r = Actor.objects.get(name=name).roles.all()
+                    # print(task.template.role in Actor.objects.get(name=name).roles.all())
+                    if task.status == "Started" and task.template.role in r:
+                        # print("LOL")
                         pending_execs.append(process)
                         flag_inner = 1
                 if not flag_inner:
                     available_execs.append(process)
-                    flag_inner = 1
-                if flag_inner:
-                    break
+                
     context = {
         'pending_execs' : pending_execs,
         'available_execs' : available_execs,
