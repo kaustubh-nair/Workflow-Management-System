@@ -12,6 +12,7 @@ urlpatterns = [
         path('<str:name>/removerole/<int:roleid>/fromactor/<int:actorid>', views.sessions.remove_role_from_actor, name = 'remove_role_from_actor'),
         path('<str:name>/myexecutions', views.sessions.myexecutions, name = 'myexecutions'),
         path('process/template/create/', views.process.create_template, name='create_process_template'),
+        path('process/<int:process_template_id>/task/add/', views.process.add_task, name='add_task'),
         path('process/create/', views.process.create, name='create_process'),
         path('process/template/<int:process_id>/edit/', views.process.edit, name='edit_process_template'),
         path('task/template/<int:task_template_id>/edit/', views.process.edit_task, name='edit_process'),

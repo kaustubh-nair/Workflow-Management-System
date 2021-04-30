@@ -1,0 +1,76 @@
+{% include "./base.html" %}
+
+{% load bootstrap4 %}
+{% load extra_tags %}
+    <nav class="navbar navbar-expand-md navbarcolor">
+      <div class="container-fluid">
+        <a class="navbar-link" href="{% url 'viewdefs' user.username %}">Workflows</a>
+        <a class="navbar-link" href="#">My Executions</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+          <ul class="nav-item ml-md-auto" style="list-style-type: none">
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                {{ user.username }}
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+<br>
+<h2 style="padding-left: 3vw">Edit Task template</h2>
+<br>
+<div style="padding-left: 4vh; padding-bottom: 3vh">
+    <a class="btn btn-primary" href={{process_template_id|get_process_edit_url}}>&#8592; Go Back</a>
+    
+</div>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li class="alert alert-success {{ message.type }} " > {{ message.message }} </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<form method="POST">
+    {% csrf_token %}
+    {% for field in form.visible_fields %}
+<div class="taskedit">
+    <div class="attr-container task-attr">
+        {{ field.label_tag }}
+    </div>
+     <div class="attr-container">
+         {{ field }}
+     </div>
+          {{ field.help_text }}
+</div>
+    {% endfor %}
+    <div style="padding-left: 7vh">
+        <button type="submit" class="btn btn-success">Save</button>
+    </div>
+</form>

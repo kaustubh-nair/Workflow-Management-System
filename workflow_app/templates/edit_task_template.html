@@ -10,6 +10,13 @@
     <a class="btn btn-primary" href={{id|get_process_edit_url}}>&#8592; Go Back</a>
     
 </div>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li class="alert alert-success {{ message.type }} " > {{ message.message }} </li>
+    {% endfor %}
+</ul>
+{% endif %}
 
 <form method="POST">
     {% csrf_token %}

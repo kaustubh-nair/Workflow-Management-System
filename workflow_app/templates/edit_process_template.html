@@ -7,6 +7,13 @@
 <h2 style="padding-left: 3vw">Edit Workflow definition</h2>
 <br>
 
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li class="alert alert-success {{ message.type }} " > {{ message.message }} </li>
+    {% endfor %}
+</ul>
+{% endif %}
 <form method="POST">
     {% csrf_token %}
     {% for field in form.visible_fields %}
@@ -35,6 +42,7 @@
     </table>
     </div>
     <div style="padding-left: 7vh">
+        <a class="btn btn-primary" href={{process_template_id|get_add_new_task_url}}>Add new task</a>
         <button type="submit" class="btn btn-success">Save</button>
     </div>
 </form>
