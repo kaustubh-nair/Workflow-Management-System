@@ -6,7 +6,10 @@ from . import views
 urlpatterns = [
         path('', views.sessions.home, name='home'),
         path('<str:name>/viewdefs', views.sessions.viewdefs, name = 'viewdefs'),
-        path('viewexecs/<int:def_id>', views.sessions.viewexecs, name = 'viewexecs'),
+        path('<str:name>/viewexecs/<int:def_id>', views.sessions.viewexecs, name = 'viewexecs'),
+        path('<str:name>/viewactors', views.sessions.viewactors, name = 'viewactors'),
+        path('<str:name>/addrole/<int:roleid>/toactor/<int:actorid>', views.sessions.add_role_to_actor, name = 'add_role_to_actor'),
+        path('<str:name>/removerole/<int:roleid>/fromactor/<int:actorid>', views.sessions.remove_role_from_actor, name = 'remove_role_from_actor'),
         path('process/template/create/', views.process.create_template, name='create_process_template'),
         path('process/create/', views.process.create, name='create_process'),
         path('process/template/<int:process_id>/edit/', views.process.edit, name='edit_process_template'),

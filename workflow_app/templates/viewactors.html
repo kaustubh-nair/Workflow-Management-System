@@ -1,5 +1,7 @@
 {% load static %}
 {% load bootstrap4 %}
+{% load filter_roles %}
+{% load widget_tweaks %}
 {% include 'base.html' %}
 {% include 'navbar.html' %}
 
@@ -36,68 +38,56 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
-          {% if group == 'CU' %}
-          <form
-            action="{% url 'create_process_template' %}"
-            method="get"
-          >
-            {% csrf_token %} {% buttons %}
-            <button type="submit" class="btn btn-success btn-lg">
-              Create New Workflow
-            </button>
-            {% endbuttons %}
-          </form>
-          <form
-            action="{% url 'viewactors' user.username %}"
-            method="get"
-          >
-            {% csrf_token %} {% buttons %}
-            <button type="submit" class="btn btn-primary btn-lg">
-              View All Actors
-            </button>
-            {% endbuttons %}
-          </form>
-          {% endif %}
           <table class="table">
             <thead>
               <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Name</th>
-                <th scope="col">Description</th>
-                <th scope="col">Creator</th>
-                <th scope="col">Executions</th>
+                <th scope="col">User Type</th>
+                <th scope="col">Roles Present (Click to Remove)</th>
+                <th scope="col">Roles Not Present (Click to Add)</th>
               </tr>
             </thead>
-            {% if def_list %}
+            {% if actor_list %}
             <tbody>
-              {% for def in def_list %}
+              {% for actor in actor_list %}
               <tr>
                 <th scope="row">{{ forloop.counter }}</th>
-                <td><a href="{% url 'edit_process_template' def.id %}">{{ def.name }}</a></td>
-                <td>{{ def.description }}</td>
-                <td>{{ def.creator.name }}</td>
+                <td><a href="#">{{ actor.name }}</a></td>
+                {% if actor.group == 'CU' %}
+                <td>Creation User</td>
+                {% else %}
+                <td>Execution User</td>
+                {% endif %}
                 <td>
+                  {% if actor.roles %} {% for role in actor.roles.all %}
                   <form
-                    action="{% url 'create_execution' def.id %}"
-                    method="GET"
-                  >
-                    {% csrf_token %} {% buttons %}
-                    <button type="submit" class="btn btn-success btn-xs">
-                      Create New Execution
-                    </button>
-                    {% endbuttons %}
-                  </form>
-                  <form
-                    action="{% url 'viewexecs' user.username def.id %}"
+                    action="{% url 'remove_role_from_actor' user.username role.id actor.id %}"
                     method="post"
                     class="post-form"
                   >
                     {% csrf_token %} {% buttons %}
-                    <button type="submit" class="btn btn-primary btn-xs">
-                      View All Executions
+                    <button type="submit" class="btn btn-success btn-xs">
+                      {{ role.name }}
                     </button>
                     {% endbuttons %}
                   </form>
+                  {% endfor %} {% endif %}
+                </td>
+                <td>
+                  {% for role in role_list|filter_absent:actor.id %}
+                  <form
+                    action="{% url 'add_role_to_actor' user.username role.id actor.id %}"
+                    method="post"
+                    class="post-form"
+                  >
+                    {% csrf_token %} {% buttons %}
+                    <button type="submit" class="btn btn-danger btn-xs">
+                      {{ role.name }}
+                    </button>
+                    {% endbuttons %}
+                  </form>
+                  {% endfor %}
                 </td>
               </tr>
               {% endfor %}
