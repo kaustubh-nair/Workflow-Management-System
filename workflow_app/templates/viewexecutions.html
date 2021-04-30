@@ -74,6 +74,10 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
+          <div class="page-header text-center">
+            <h2> Template Name: {{ process_template.name }}</h2>
+            <h4> Created By: {{ process_template.creator.name }}</h4>
+          </div>
           <table class="table">
             <thead>
               <tr>
@@ -109,6 +113,16 @@
             </tbody>
             {% endif %}
           </table>
+          <form
+            action="{% url 'create_execution' process_template.id %}"
+            method="GET"
+          >
+            {% csrf_token %} {% buttons %}
+            <button type="submit" class="btn btn-success btn-xs btn-block">
+              Create New Execution
+            </button>
+            {% endbuttons %}
+          </form>
         </div>
       </div>
     </div>

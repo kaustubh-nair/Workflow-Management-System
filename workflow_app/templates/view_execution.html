@@ -54,7 +54,7 @@
 </nav>
 <div class="container-fluid">
   <div class="page-header">
-    <h1> Execution Name: {{ exec_name }}</h1>
+    <h1> Execution Name: {{ exec_obj.name }}</h1>
   </div>
   <div class="row">
     <div class="col-md-7">
@@ -102,19 +102,24 @@
                   Deadline: {{task.deadline}}
                 </p>
                 <p class="card-text">
-                  Current Output: {{task.output}}
+                  Current Output: <br>
+                  {{task.output}}
                 </p>
               </div>
               <div class="card-footer">
                 {% if task.status == "Started" and task.template.role in user_roles %}
                   {% for action in task.template.status_states|parse_csv %}
-                    {% if action %}
-                      <form action="{% url 'completing task' task.process.id task.id action %}" method="post" class="post-form">
+                    {% if action != "" %}
+                      <form action="{% url 'completing task' task.process.id task.id action %}" method="GET" class="form-inline">
                           {% csrf_token %}
                           {% buttons %}
                             <button type="submit" class="btn btn-success">{{ action }}</button>
                           {% endbuttons %}
                       </form>
+                    {% elif message %}
+                    <div class="alert alert-danger">
+                      {{ message }}
+                    </div>
                     {% endif %}
                   {% endfor %}
                 {% endif %}
@@ -128,13 +133,24 @@
       {% endfor %}
     </div>
     <div class="col-md-5">
-      <h2>Execution: {{exec_name}}</h2>
-      <p>Details about Execution</p>
-      Current Role:
+      <h2>Execution: {{exec_obj.name}}</h2>
+      <form action="{% url 'changeexecname' exec_obj.id %}" method="POST" class="post-form">
+        {% csrf_token %}
+        <input type="text"  name="execname">
+        <input type="submit" class="btn btn-primary" value="Change Exec Name">
+      </form>
+      <p>Creator: {{exec_obj.creator.name}}</p>
+      <p>Date Of Creation: {{exec_obj.dateOfCreation | date:"D d M Y" }}</p>
+      Current Role of User:
       {% for role in user_roles%}
       <p> {{ role.name }} </p>
       {% endfor %}
-      <button type="submit" class="btn btn-danger">Stop Execution</button>
+      <form action="{% url 'delete_execution' exec_obj.id %}" method="GET">
+        <button type="submit" class="btn btn-danger">Delete Execution</button>
+      </form>
+      <form action="{% url 'viewexecs' exec_obj.template.id %}" method="GET">
+        <button type="submit" class="btn btn-primary">View Executions on Same Template</button>
+      </form>
     </div>
   </div>
 </div>

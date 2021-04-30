@@ -37,7 +37,12 @@ def viewdefs(request, name):
 
 def viewexecs(request, def_id):
     exec_list = Process.objects.filter(template__id = def_id)
-    context = {'exec_list' : exec_list}
+    process_template = ProcessTemplate.objects.filter(id = def_id).get()
+    print(process_template.id)
+    context = {
+        'process_template' : process_template,
+        'exec_list' : exec_list
+        }
     return render(request, 'viewexecutions.html', context)
 
 def index(request, exec_id):
