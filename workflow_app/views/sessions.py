@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.views.generic import TemplateView
 from django.views import generic
 from django.urls import reverse_lazy, reverse
-from ..models import ProcessTemplate, Process, Actor
+from ..models import ProcessTemplate, Process, Actor, Role
 from .signup_form import SignUpForm
 
 def signup(request):
@@ -31,14 +31,39 @@ def home(request):
 
 def viewdefs(request, name):
     curr_actor = Actor.objects.get(name=name)
-    def_list = ProcessTemplate.objects.all()
+    def_list = ProcessTemplate.objects.all().order_by('-dateOfCreation')
     context = {'def_list' : def_list, 'group' : curr_actor.group}
     return render(request, 'viewdefinitions.html', context)
 
-def viewexecs(request, def_id):
+def viewexecs(request, name, def_id):
     exec_list = Process.objects.filter(template__id = def_id)
-    context = {'exec_list' : exec_list}
+    process_template = ProcessTemplate.objects.filter(id = def_id).get()
+    print(process_template.id)
+    context = {
+        'process_template' : process_template,
+        'exec_list' : exec_list
+        }
     return render(request, 'viewexecutions.html', context)
+
+def viewactors(request, name):
+    actor_list = Actor.objects.all()
+    role_list = Role.objects.all()
+    context = {'actor_list' : actor_list, 'role_list' : role_list}
+    return render(request, 'viewactors.html', context)
+
+def add_role_to_actor(request, name, roleid, actorid):
+    curr_actor = Actor.objects.get(id=actorid)
+    curr_role = Role.objects.get(id=roleid)
+    curr_actor.roles.add(curr_role)
+    curr_actor.save()
+    return HttpResponseRedirect(reverse('viewactors', args=(name,)), request)
+
+def remove_role_from_actor(request, name, roleid, actorid):
+    curr_actor = Actor.objects.get(id=actorid)
+    curr_role = Role.objects.get(id=roleid)
+    curr_actor.roles.remove(curr_role)
+    curr_actor.save()
+    return HttpResponseRedirect(reverse('viewactors', args=(name,)), request)
 
 def index(request, exec_id):
     return HttpResponse("Hi")
