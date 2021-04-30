@@ -21,6 +21,13 @@ from ..models import Task
 from ..models import Process
 
 @login_required
+def change_exec_name(request, execution_id):
+    current_exec = Process.objects.filter(id=execution_id)
+    current_exec.update(name = request.POST['execname'])
+    current_exec.get().save()
+    return HttpResponseRedirect(reverse('executionindex', args=(execution_id,)))
+    
+@login_required
 def delete_exec(request, execution_id):
     # return HttpResponse("LOL")
     current_exec = Process.objects.filter(id=execution_id).get()
@@ -57,16 +64,26 @@ def create_exec(request, template_id):
 def index(request, exec_id):
     exec_obj = Process.objects.filter(id = exec_id).get()
     task_list = Task.objects.filter(process_id=exec_id)
-    total_action_list = []
-    for task in task_list:
-        task_template = task.template
-        task_template_actions = task_template.status_states
-        action_list = parse_csv(task_template_actions)
-        total_action_list.append(action_list)
-    
-    print(total_action_list)
-    
+    # total_action_list = []
+    # for task in task_list:
+    #     task_template = task.template
+    #     task_template_actions = task_template.status_states
+    #     action_list = parse_csv(task_template_actions)
+    #     total_action_list.append(action_list)
     current_user = Actor.objects.filter(name=request.user.get_username())
+    
+    # print(total_action_list)
+    message = "Task Template is Broken. Cannot complete currently running task bacause no status_states specified"
+    action_list = ""
+    started_tasks = Task.objects.filter(status = "Started", process_id = exec_id)
+    for task in started_tasks:
+        action_list += task.template.status_states
+
+    print(action_list)
+
+    if (action_list!=""):
+        message = ""
+    
     # print(Role.objects.filter(actor__id=current_user.get().id))
     user_roles = Role.objects.filter(actor__id=current_user.get().id)
     # print(user_roles)
@@ -78,7 +95,8 @@ def index(request, exec_id):
         'exec_obj': exec_obj,
         'task_list' : task_list,
         'user_roles' : user_roles,
-        'total_action_list': total_action_list,
+        # 'total_action_list': total_action_list,
+        'message' : message
     }
     # return HttpResponse(output)
     return HttpResponse(template.render(context,request))

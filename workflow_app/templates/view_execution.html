@@ -115,6 +115,10 @@
                             <button type="submit" class="btn btn-success">{{ action }}</button>
                           {% endbuttons %}
                       </form>
+                    {% elif message %}
+                    <div class="alert alert-danger">
+                      {{ message }}
+                    </div>
                     {% endif %}
                   {% endfor %}
                 {% endif %}
@@ -129,9 +133,14 @@
     </div>
     <div class="col-md-5">
       <h2>Execution: {{exec_obj.name}}</h2>
+      <form action="{% url 'changeexecname' exec_obj.id %}" method="POST" class="post-form">
+        {% csrf_token %}
+        <input type="text"  name="execname">
+        <input type="submit" class="btn btn-primary" value="Change Exec Name">
+      </form>
       <p>Creator: {{exec_obj.creator.name}}</p>
       <p>Date Of Creation: {{exec_obj.dateOfCreation | date:"D d M Y" }}</p>
-      Current Role:
+      Current Role of User:
       {% for role in user_roles%}
       <p> {{ role.name }} </p>
       {% endfor %}
