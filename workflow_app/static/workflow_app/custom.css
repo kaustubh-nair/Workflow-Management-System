@@ -42,3 +42,10 @@
 .process {
     padding-left: 3vw;
 }
+.taskedit{
+    display: flex;
+}
+
+.task-attr {
+    padding-left: 4vw;
+}

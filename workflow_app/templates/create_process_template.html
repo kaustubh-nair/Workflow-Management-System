@@ -121,8 +121,6 @@
           {% for name, value in task.items %}
           <tr>
               <th><label for="{{name}}">{{name|humanreadable}}</label></th>
-              <!-- TODO: Inline CSS remove -->
-              <!-- https://stackoverflow.com/a/29949813/9915027 -->
               <td><input style="color: #000000; background: #ffffff; border-style: none;" type="text" id="{{name}}" name="{{number|addstr:name}}" value="{{value}}" readonly="readonly"></td>
           </tr>
           {% endfor %}
