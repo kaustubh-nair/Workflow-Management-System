@@ -108,12 +108,14 @@
               <div class="card-footer">
                 {% if task.status == "Started" and task.template.role in user_roles %}
                   {% for action in task.template.status_states|parse_csv %}
-                    <form action="{% url 'completing task' task.process.id task.id action %}" method="post" class="post-form">
-                        {% csrf_token %}
-                        {% buttons %}
-                          <button type="submit" class="btn btn-success">{{ action }}</button>
-                        {% endbuttons %}
-                    </form>
+                    {% if action %}
+                      <form action="{% url 'completing task' task.process.id task.id action %}" method="post" class="post-form">
+                          {% csrf_token %}
+                          {% buttons %}
+                            <button type="submit" class="btn btn-success">{{ action }}</button>
+                          {% endbuttons %}
+                      </form>
+                    {% endif %}
                   {% endfor %}
                 {% endif %}
                 <!-- <button type="button" class="btn btn-success btn-xs" onclick="showAlert()">

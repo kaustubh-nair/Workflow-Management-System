@@ -1,0 +1,16 @@
+.attr-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+.task-container {
+    display: flex;
+    flex-direction: column;
+}
+.process-container {
+    display: flex;
+    padding-left: 3vw;
+    padding-right: 3vw;
+    justify-content: space-between;
+}

@@ -1,7 +1,9 @@
 from django.shortcuts import render
+from django.template import loader
 from datetime import datetime
 from ..models import ProcessTemplate, TaskTemplate, Role, Task, Process
 from .process_form import ProcessForm
+from .process_template_form import ProcessTemplateForm
 
 def create(request):
     messages=[]
@@ -26,3 +28,28 @@ def create(request):
 
     context.update({'form': form, 'messages': messages, 'task_templates': task_templates, 'template': template, 'process_template_id': process_template_id})
     return render(request, 'create_process.html', context)
+
+
+def create_template(request):
+    tasks = {}
+    form = ProcessTemplateForm()
+    messages = []
+
+    if request.method == 'POST':
+        request_body = dict(request.POST)
+        form = ProcessTemplateForm(request.POST.dict())
+        tasks = TaskTemplate.build_tasks(request_body)
+        if request_body['action'][0] == 'add_task':
+            tasks = TaskTemplate.add_new_task(tasks, request_body)
+        elif request_body['action'][0] == 'save':
+            # if form.is_valid():
+            form.save()
+            form = ProcessTemplateForm()
+            tasks = {}
+            messages.append({'type': 'success', 'message': 'Process template created successfully'})
+    else:
+        tasks = TaskTemplate.build_tasks(dict(request.GET))
+
+    context = {'form': form, 'tasks': tasks, 'messages': messages}
+
+    return render(request, 'create_process_template.html', context)
