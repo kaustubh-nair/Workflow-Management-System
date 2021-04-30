@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template import loader
 from datetime import datetime
 from ..models import ProcessTemplate, TaskTemplate, Role, Task, Process
@@ -80,6 +80,7 @@ def create_template(request):
             form = ProcessTemplateForm()
             tasks = {}
             messages.append({'type': 'success', 'message': 'Process template created successfully'})
+            return redirect('home')
     else:
         tasks = TaskTemplate.build_tasks(dict(request.GET))
 
