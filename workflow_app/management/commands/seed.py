@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from ...models.role import Role
 from ...models.actor import Actor
 from ...models.process_template import ProcessTemplate
@@ -22,6 +23,17 @@ class Command(BaseCommand):
         self.stdout.write('done.')
 
 def init(self):
+
+    user = User.objects.create(username="Actor1")
+    user.set_password("Actor1Password")
+    user.save()
+    user = User.objects.create(username="Actor2")
+    user.set_password("Actor3Password")
+    user.save()
+    user = User.objects.create(username="Actor3")
+    user.set_password("Actor3Password")
+    user.save()
+
     role1 = Role(name = "Role 1")
     role1.save()
     role2 = Role(name = "Role 2")
