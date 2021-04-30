@@ -109,6 +109,16 @@
             </tbody>
             {% endif %}
           </table>
+          <form
+            action="{% url 'create_execution' process_template.id %}"
+            method="GET"
+          >
+            {% csrf_token %} {% buttons %}
+            <button type="submit" class="btn btn-success btn-xs btn-block">
+              Create New Execution
+            </button>
+            {% endbuttons %}
+          </form>
         </div>
       </div>
     </div>
