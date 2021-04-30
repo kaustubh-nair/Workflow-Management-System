@@ -79,7 +79,7 @@ def index(request, exec_id):
     for task in started_tasks:
         action_list += task.template.status_states
 
-    print(action_list)
+    # print(action_list)
 
     if (action_list!=""):
         message = ""
@@ -138,7 +138,7 @@ def completeTask(request, exec_id, task_id, action):
             action_user = Actor.objects.filter(name=request.user.get_username())
             current_task.get().actors.add(action_user.get())
             # current_task.get().save()
-            out = current_task.get().output + action_user.get().name + ":" + action + ";"
+            out = current_task.get().output + action_user.get().name + " : " + action + "; <br>"
             print(out)
             current_task.update(output = out)            
             current_task.get().save()
