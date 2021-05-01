@@ -3,7 +3,7 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<h2 style="padding:2vw; text-align: center;">Log In</h2>
+<h2 style="padding:2vw; text-align: center">Log In</h2>
 {% if messages %}
 <ul class="messages text-center">
     {% for message in messages %}
@@ -12,7 +12,7 @@
 </ul>
 {% endif %}
 
-<form method="post" class="post-form text-center">
+<form method="post" class="post-form ">
     {% csrf_token %}
     {% for field in form.visible_fields %}
     <div class="loginfield">
