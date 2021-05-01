@@ -130,6 +130,7 @@ def edit_task(request, task_template_id):
         task_template.status_states = req['status_states'][0]
         task_template.role_id = int(req['role'][0])
         task_template.save()
+        messages.append({'type': 'success', 'message': 'Task template edited successfully'})
 
     role = task_template.role
     role=(role.id, role.name)
