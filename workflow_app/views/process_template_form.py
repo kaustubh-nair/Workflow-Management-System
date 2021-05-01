@@ -48,7 +48,7 @@ class ProcessTemplateForm(forms.Form):
                 is_first_task = False
 
             role = Role.objects.filter(name=task['role']).first()
-            t = TaskTemplate.objects.create(name=task['name'], description=task['description'], role=role, process_template_id=process_template.id, status_states=task['status_states'], is_first_task=is_first_task, all_or_any=[True if task['all_or_any'] == 'on' else False][0])
+            t = TaskTemplate.objects.create(name=task['name'], description=task['description'], role=role, process_template_id=process_template.id, status_states=task['status_states'], is_first_task=is_first_task, all_or_any=[True if 'all_or_any' in task else False][0])
             task.update({'id': t.id})
             self.tasks[number] = task
 

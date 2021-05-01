@@ -62,6 +62,7 @@ def create_exec(request, template_id):
 def index(request, exec_id):
     exec_obj = Process.objects.filter(id = exec_id).get()
     task_list = Task.objects.filter(process_id=exec_id)
+
     # total_action_list = []
     # for task in task_list:
     #     task_template = task.template
