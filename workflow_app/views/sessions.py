@@ -1,11 +1,12 @@
 from django.contrib.auth import forms
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth import authenticate, login
 from django.views.generic import TemplateView
 from django.views import generic
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.decorators import login_required
+from django.db.utils import IntegrityError
 from ..models import ProcessTemplate, Process, Actor, Role, TaskTemplate, Task
 from .signup_form import SignUpForm
 
@@ -55,8 +56,50 @@ def viewexecs(request, name, def_id):
 def viewactors(request, name):
     actor_list = Actor.objects.all()
     role_list = Role.objects.all()
-    context = {'actor_list' : actor_list, 'role_list' : role_list}
+    dup_message = ""
+    inv_message = ""
+    context = {'actor_list' : actor_list, 'role_list' : role_list, 'dup_message' : dup_message, 'inv_message' : inv_message}
     return render(request, 'viewactors.html', context)
+
+@login_required
+def create_role(request, name):
+    rolename = request.POST.get('rolename')
+    role_list = Role.objects.all()
+    present = 0
+    for role in role_list:
+        if role.name == rolename:
+            present = 1
+            break
+    if not present:
+        new_role = Role(name=rolename)
+        new_role.save()
+        return HttpResponseRedirect(reverse('viewactors', args=(name,)), request)
+    else:
+        actor_list = Actor.objects.all()
+        dup_message = "Duplicate role name. Please enter a unique name"
+        inv_message = ""
+        context = {'actor_list' : actor_list, 'role_list' : role_list, 'dup_message' : dup_message, 'inv_message' : inv_message}
+        return render(request, 'viewactors.html', context)
+
+@login_required
+def delete_role(request, name):
+    deleterolename = request.POST.get('deleterolename')
+    role_list = Role.objects.all()
+    present = 0
+    for role in role_list:
+        if role.name == deleterolename:
+            present = 1
+            break
+    if present:
+        curr_role = Role.objects.get(name=deleterolename)
+        curr_role.delete()
+        return HttpResponseRedirect(reverse('viewactors', args=(name,)), request)
+    else:
+        actor_list = Actor.objects.all()
+        dup_message = ""
+        inv_message = "Role does not exist. Please enter a valid name"
+        context = {'actor_list' : actor_list, 'role_list' : role_list, 'dup_message' : dup_message, 'inv_message' : inv_message}
+        return render(request, 'viewactors.html', context)
 
 @login_required
 def add_role_to_actor(request, name, roleid, actorid):
