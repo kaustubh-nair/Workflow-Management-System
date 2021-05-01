@@ -4,16 +4,33 @@
 
 {% block content %}
 <h2>Log In</h2>
-<form method="post">
-  {% csrf_token %} {{ form.as_p }}
-  <button type="submit">Log In</button>
-</form>
-<p> Don't have an account? </p>
-<form action="{% url 'signup' %}" method="post" class="post-form">
-  {% csrf_token %} {% buttons %}
-  <button type="submit" class="btn btn-success btn-xs">
-    Sign Up
-  </button>
-  {% endbuttons %}
-</form>
+
+  <form method="post">
+    {% csrf_token %}
+    {% for field in form.visible_fields %}
+        <div class="loginfield">
+            <div class="loginlabel">
+                {{ field.label_tag }}
+            </div>
+             <div class="loginbox">
+                 {{ field }}
+             </div>
+             <!--{{ field.help_text }}-->
+        </div>
+    {% endfor %}
+        <div class="loginbutton" style="padding-top: 3vh;">
+            <button class="btn btn-success" type="submit">Log in</button>
+        <div >
+  </form>
+        <h4 style="padding-top: 3vw; margin-left: -15vh;"> Don't have an account? </h4>
+        <form action="{% url 'signup' %}" method="post" class="post-form">
+          {% csrf_token %} {% buttons %}
+          <button  type="submit" class="btn btn-success btn-xs">
+            Sign Up
+          </button>
+          {% endbuttons %}
+        </form>
+    
+                
+            </div>
 {% endblock %}
