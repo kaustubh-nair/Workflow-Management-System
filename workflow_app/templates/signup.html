@@ -14,7 +14,7 @@
 {% endif %}
   <h2 style="padding:2vw;">Sign up</h2>
   <div class="logincontainer">
-  <form method="post">
+  <form method="post" class="text-center">
     {% csrf_token %}
     {% for field in form.visible_fields %}
         <div class="loginfield">

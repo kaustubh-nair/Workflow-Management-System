@@ -38,6 +38,28 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
+          <form
+            action="{% url 'create_role' user.username %}"
+            class="form-inline"
+            method="post"
+          >
+            {% csrf_token %}
+            <input
+              id="csrf_token"
+              name="rolename"
+              class="form-control mr-sm-2"
+              type="text"
+              required
+            />
+            <button class="btn btn-primary my-2 my-sm-0" type="submit">
+              Create Role
+            </button>
+          </form>
+          {% if dup_message %}
+          <div class="alert alert-danger">
+            {{ dup_message }}
+          </div>
+          {% endif %}
           <table class="table">
             <thead>
               <tr>
@@ -64,7 +86,8 @@
                   <form
                     action="{% url 'remove_role_from_actor' user.username role.id actor.id %}"
                     method="post"
-                    class="post-form"
+                    class="form-inline"
+                    style="display: inline-block"
                   >
                     {% csrf_token %} {% buttons %}
                     <button type="submit" class="btn btn-success btn-xs">
@@ -79,7 +102,8 @@
                   <form
                     action="{% url 'add_role_to_actor' user.username role.id actor.id %}"
                     method="post"
-                    class="post-form"
+                    class="form-inline"
+                    style="display: inline-block"
                   >
                     {% csrf_token %} {% buttons %}
                     <button type="submit" class="btn btn-danger btn-xs">
@@ -94,6 +118,28 @@
             </tbody>
             {% endif %}
           </table>
+          <form
+            action="{% url 'delete_role' user.username %}"
+            class="form-inline"
+            method="post"
+          >
+            {% csrf_token %}
+            <input
+              id="csrf_token"
+              name="deleterolename"
+              class="form-control mr-sm-2"
+              type="text"
+              required
+            />
+            <button class="btn btn-danger my-2 my-sm-0" type="submit">
+              Delete Role
+            </button>
+          </form>
+          {% if inv_message %}
+          <div class="alert alert-danger">
+            {{ inv_message }}
+          </div>
+          {% endif %}
         </div>
       </div>
     </div>

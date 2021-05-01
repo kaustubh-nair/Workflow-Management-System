@@ -102,9 +102,13 @@ def completeTask(request, exec_id, task_id, action):
     # current_task_template_actions = current_task_template.status_states
     # print(parse_csv(current_task_template_actions))
     # return HttpResponseRedirect(reverse('executionindex', args=(exec_id,)))
-
-    next_task_template = current_task_template.children.get()
-    next_task = Task.objects.filter(process_id=exec_id, template_id = next_task_template.id)
+    if(current_task_template.children.filter()):
+        next_task_template = current_task_template.children.get()
+        next_task = Task.objects.filter(process_id=exec_id, template_id = next_task_template.id)
+    else:
+        next_task_template = None
+        next_task = None
+        
 
     # Add Current Actor the list of actors in current task 
     if(current_task_template.all_or_any == True):
@@ -122,8 +126,9 @@ def completeTask(request, exec_id, task_id, action):
             current_task.update(status = "Completed")
             current_task.get().save()
 
-            next_task.update(status = "Started")
-            next_task.get().save()
+            if(next_task):
+                next_task.update(status = "Started")
+                next_task.get().save()
             
             return HttpResponseRedirect(reverse('executionindex', args=(exec_id,)))
         else:
@@ -139,8 +144,9 @@ def completeTask(request, exec_id, task_id, action):
                 current_task.update(status = "Completed")
                 current_task.get().save()
 
-                next_task.update(status = "Started")
-                next_task.get().save()
+                if(next_task):
+                    next_task.update(status = "Started")
+                    next_task.get().save()
 
             return HttpResponseRedirect(reverse('executionindex', args=(exec_id,)))
     else:
@@ -155,7 +161,8 @@ def completeTask(request, exec_id, task_id, action):
         current_task.update(status = "Completed")
         current_task.get().save()
 
-        next_task.update(status = "Started")
-        next_task.get().save()
+        if(next_task):
+            next_task.update(status = "Started")
+            next_task.get().save()
         
         return HttpResponseRedirect(reverse('executionindex', args=(exec_id,)))
