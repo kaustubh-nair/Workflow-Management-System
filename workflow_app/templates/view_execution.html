@@ -72,7 +72,7 @@
                 {% if task.status == "Started" and task.template.role in user_roles %}
                   {% for action in task.template.status_states|parse_csv %}
                     {% if action != "" %}
-                      <form action="{% url 'completing task' task.process.id task.id action %}" method="GET" class="form-inline">
+                      <form action="{% url 'completing task' task.process.id task.id action %}" method="GET" class="form-inline" style="display: inline-block">
                           {% csrf_token %}
                           {% buttons %}
                             <button type="submit" class="btn btn-success">{{ action }}</button>
