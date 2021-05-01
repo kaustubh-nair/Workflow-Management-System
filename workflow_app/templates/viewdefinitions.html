@@ -73,7 +73,11 @@
               {% for def in def_list %}
               <tr>
                 <th scope="row">{{ forloop.counter }}</th>
-                <td><a href="{% url 'edit_process_template' def.id %}">{{ def.name }}</a></td>
+                {% if group == 'CU' %}
+                    <td><a href="{% url 'edit_process_template' def.id %}">{{ def.name }}</a></td>
+                {% else %}
+                    <td>{{ def.name }}</td>
+                {% endif %}
                 <td>{{ def.description }}</td>
                 <td>{{ def.creator.name }}</td>
                 <td>
