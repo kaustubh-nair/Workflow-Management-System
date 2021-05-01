@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from django.template import loader
 from datetime import datetime
 from ..models import ProcessTemplate, TaskTemplate, Role, Task, Process
@@ -6,6 +7,7 @@ from .process_form import ProcessForm
 from .process_template_form import ProcessTemplateForm, EditProcessTemplateForm
 from .task_template_form import TaskTemplateForm
 
+@login_required
 def move_task_up(request, process_template_id, task_id):
     grandparent = None
     task_template = TaskTemplate.objects.filter(id=task_id).first()
@@ -39,6 +41,7 @@ def move_task_up(request, process_template_id, task_id):
 
     return redirect("/process/template/" + str(process_template_id) + "/edit/")
 
+@login_required
 def move_task_down(request, process_template_id, task_id):
     grandchild = None
     task_template = TaskTemplate.objects.filter(id=task_id).first()
@@ -71,6 +74,7 @@ def move_task_down(request, process_template_id, task_id):
 
     return redirect("/process/template/" + str(process_template_id) + "/edit/")
 
+@login_required
 def add_task(request, process_template_id):
     messages=[]
     process_template = ProcessTemplate.objects.filter(id=process_template_id).first()
@@ -91,6 +95,7 @@ def add_task(request, process_template_id):
     context = {'process_template_id': process_template_id, 'form': form, 'messages': messages}
     return render(request, 'add_task_template.html', context)
 
+@login_required
 def edit(request, process_id):
     messages=[]
     process_template = ProcessTemplate.objects.filter(id=process_id).first()
@@ -111,6 +116,7 @@ def edit(request, process_id):
 
     return render(request, 'edit_process_template.html', context)
 
+@login_required
 def edit_task(request, task_template_id):
     messages=[]
     task_template = TaskTemplate.objects.filter(id=task_template_id).first()
@@ -129,6 +135,7 @@ def edit_task(request, task_template_id):
     context = {'id': task_template.process_template_id, 'form': form, 'messages': messages}
     return render(request, 'edit_task_template.html', context)
 
+@login_required
 def create(request):
     messages=[]
     form = ProcessForm()
@@ -154,6 +161,7 @@ def create(request):
     return render(request, 'create_process.html', context)
 
 
+@login_required
 def create_template(request):
     tasks = {}
     form = ProcessTemplateForm()

@@ -9,6 +9,7 @@ from ..models import ProcessTemplate, Process, Actor, Role, TaskTemplate, Task
 from .signup_form import SignUpForm
 
 def signup(request):
+    messages = []
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -19,9 +20,11 @@ def signup(request):
                 temp = Actor(name=username, group=group)
                 temp.save()
             return redirect('home')
+        else:
+            messages.append(form.errors)
     else:
         form = SignUpForm()
-    return render(request, 'signup.html', {'form': form})
+    return render(request, 'signup.html', {'form': form, 'messages': messages})
 
 def home(request):
     if request.user.is_authenticated:

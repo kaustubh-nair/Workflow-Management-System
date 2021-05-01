@@ -5,6 +5,13 @@
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
+{% if messages %}
+<ul style="padding-top: 2vw;" class="messages">
+    {% for message in messages %}
+        <li class="alert alert-warning  " > {{ message}} </li>
+    {% endfor %}
+</ul>
+{% endif %}
   <h2 style="padding:2vw;">Sign up</h2>
   <div class="logincontainer">
   <form method="post">
