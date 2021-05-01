@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.views.generic import TemplateView
 from django.views import generic
 from django.urls import reverse_lazy, reverse
-from ..models import ProcessTemplate, Process, Actor, Role
+from ..models import ProcessTemplate, Process, Actor, Role, TaskTemplate, Task
 from .signup_form import SignUpForm
 
 def signup(request):
@@ -64,6 +64,68 @@ def remove_role_from_actor(request, name, roleid, actorid):
     curr_actor.roles.remove(curr_role)
     curr_actor.save()
     return HttpResponseRedirect(reverse('viewactors', args=(name,)), request)
+
+# def myexecutions(request, name):
+#     exec_list = Process.objects.all()
+#     pending_execs = []
+#     available_execs = []
+#     for e in exec_list:
+#         all_templates = TaskTemplate.objects.filter(process_template=e.template)
+#         flag = 0
+#         for template in all_templates:
+#             if template.role in Actor.objects.get(name=name).roles.all():
+#                 all_tasks = Task.objects.filter(template=template)
+#                 for task in all_tasks:
+#                     if flag:
+#                         break
+#                     if task.status == "Started":
+#                         pending_execs.append(e)
+#                         flag = 1
+#                 if not flag:
+#                     available_execs.append(e)
+#                     flag = 1
+#             if flag:
+#                 break
+#     context = {
+#         'pending_execs' : pending_execs,
+#         'available_execs' : available_execs,
+#         }
+#     return render(request, 'view_my_executions.html', context)
+
+def myexecutions(request, name):
+    pending_execs = []
+    available_execs = []
+    all_process_templates = ProcessTemplate.objects.all()
+    for ptemp in all_process_templates:
+        all_task_templates = TaskTemplate.objects.filter(process_template=ptemp)
+        flag_outer = 0
+        for ttemp in all_task_templates:
+            if ttemp.role in Actor.objects.get(name=name).roles.all():
+                flag_outer = 1
+                break
+        # print(flag_outer)
+        if flag_outer:
+            flag_inner = 0
+            all_processes = Process.objects.filter(template=ptemp)
+            for process in all_processes:
+                all_tasks = Task.objects.filter(process=process)
+                for task in all_tasks:
+                    # print(task.template.role)
+                    # print(Actor.objects.get(name=name).roles.all())
+                    r = Actor.objects.get(name=name).roles.all()
+                    # print(task.template.role in Actor.objects.get(name=name).roles.all())
+                    if task.status == "Started" and task.template.role in r:
+                        # print("LOL")
+                        pending_execs.append(process)
+                        flag_inner = 1
+                if not flag_inner:
+                    available_execs.append(process)
+                
+    context = {
+        'pending_execs' : pending_execs,
+        'available_execs' : available_execs,
+        }
+    return render(request, 'view_my_executions.html', context)
 
 def index(request, exec_id):
     return HttpResponse("Hi")
