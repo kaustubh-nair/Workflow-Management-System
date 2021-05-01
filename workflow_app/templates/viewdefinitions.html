@@ -74,7 +74,7 @@
               <tr>
                 <th scope="row">{{ forloop.counter }}</th>
                 {% if group == 'CU' %}
-                    <td><a href="{% url 'edit_process_template' def.id %}">{{ def.name }}</a></td>
+                    <td>{{ def.name }}</td>
                 {% else %}
                     <td>{{ def.name }}</td>
                 {% endif %}
@@ -88,6 +88,16 @@
                     {% csrf_token %} {% buttons %}
                     <button type="submit" class="btn btn-success btn-xs">
                       Create New Execution
+                    </button>
+                    {% endbuttons %}
+                  </form>
+                  <form
+                    action="{% url 'edit_process_template' def.id %}"
+                    method="GET"
+                  >
+                    {% csrf_token %} {% buttons %}
+                    <button type="submit" class="btn btn-success btn-xs">
+                      Edit Workflow
                     </button>
                     {% endbuttons %}
                   </form>
