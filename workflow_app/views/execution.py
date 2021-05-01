@@ -135,7 +135,7 @@ def completeTask(request, exec_id, task_id, action):
             action_user = Actor.objects.filter(name=request.user.get_username())
             current_task.get().actors.add(action_user.get())
             # current_task.get().save()
-            out = current_task.get().output + action_user.get().name + " : " + action + "; <br>"
+            out = current_task.get().output + action_user.get().name + " : " + action + ","
             print(out)
             current_task.update(output = out)            
             current_task.get().save()
