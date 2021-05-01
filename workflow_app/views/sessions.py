@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.views.generic import TemplateView
 from django.views import generic
 from django.urls import reverse_lazy, reverse
+from django.contrib.auth.decorators import login_required
 from ..models import ProcessTemplate, Process, Actor, Role, TaskTemplate, Task
 from .signup_form import SignUpForm
 
@@ -32,12 +33,14 @@ def home(request):
     else:
         return HttpResponseRedirect(reverse('login'))
 
+@login_required
 def viewdefs(request, name):
     curr_actor = Actor.objects.get(name=name)
     def_list = ProcessTemplate.objects.all().order_by('-dateOfCreation')
     context = {'def_list' : def_list, 'group' : curr_actor.group}
     return render(request, 'viewdefinitions.html', context)
 
+@login_required
 def viewexecs(request, name, def_id):
     exec_list = Process.objects.filter(template__id = def_id)
     process_template = ProcessTemplate.objects.filter(id = def_id).get()
@@ -48,12 +51,14 @@ def viewexecs(request, name, def_id):
         }
     return render(request, 'viewexecutions.html', context)
 
+@login_required
 def viewactors(request, name):
     actor_list = Actor.objects.all()
     role_list = Role.objects.all()
     context = {'actor_list' : actor_list, 'role_list' : role_list}
     return render(request, 'viewactors.html', context)
 
+@login_required
 def add_role_to_actor(request, name, roleid, actorid):
     curr_actor = Actor.objects.get(id=actorid)
     curr_role = Role.objects.get(id=roleid)
@@ -61,6 +66,7 @@ def add_role_to_actor(request, name, roleid, actorid):
     curr_actor.save()
     return HttpResponseRedirect(reverse('viewactors', args=(name,)), request)
 
+@login_required
 def remove_role_from_actor(request, name, roleid, actorid):
     curr_actor = Actor.objects.get(id=actorid)
     curr_role = Role.objects.get(id=roleid)
@@ -68,33 +74,7 @@ def remove_role_from_actor(request, name, roleid, actorid):
     curr_actor.save()
     return HttpResponseRedirect(reverse('viewactors', args=(name,)), request)
 
-# def myexecutions(request, name):
-#     exec_list = Process.objects.all()
-#     pending_execs = []
-#     available_execs = []
-#     for e in exec_list:
-#         all_templates = TaskTemplate.objects.filter(process_template=e.template)
-#         flag = 0
-#         for template in all_templates:
-#             if template.role in Actor.objects.get(name=name).roles.all():
-#                 all_tasks = Task.objects.filter(template=template)
-#                 for task in all_tasks:
-#                     if flag:
-#                         break
-#                     if task.status == "Started":
-#                         pending_execs.append(e)
-#                         flag = 1
-#                 if not flag:
-#                     available_execs.append(e)
-#                     flag = 1
-#             if flag:
-#                 break
-#     context = {
-#         'pending_execs' : pending_execs,
-#         'available_execs' : available_execs,
-#         }
-#     return render(request, 'view_my_executions.html', context)
-
+@login_required
 def myexecutions(request, name):
     pending_execs = []
     available_execs = []
@@ -106,19 +86,14 @@ def myexecutions(request, name):
             if ttemp.role in Actor.objects.get(name=name).roles.all():
                 flag_outer = 1
                 break
-        # print(flag_outer)
         if flag_outer:
             flag_inner = 0
             all_processes = Process.objects.filter(template=ptemp)
             for process in all_processes:
                 all_tasks = Task.objects.filter(process=process)
                 for task in all_tasks:
-                    # print(task.template.role)
-                    # print(Actor.objects.get(name=name).roles.all())
                     r = Actor.objects.get(name=name).roles.all()
-                    # print(task.template.role in Actor.objects.get(name=name).roles.all())
                     if task.status == "Started" and task.template.role in r:
-                        # print("LOL")
                         pending_execs.append(process)
                         flag_inner = 1
                 if not flag_inner:
@@ -130,5 +105,5 @@ def myexecutions(request, name):
         }
     return render(request, 'view_my_executions.html', context)
 
-def index(request, exec_id):
+def index(request):
     return HttpResponse("Hi")

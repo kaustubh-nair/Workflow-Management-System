@@ -29,7 +29,6 @@ def change_exec_name(request, execution_id):
     
 @login_required
 def delete_exec(request, execution_id):
-    # return HttpResponse("LOL")
     current_exec = Process.objects.filter(id=execution_id).get()
     current_template = current_exec.template
     list_of_tasks = Task.objects.filter(process = current_exec)
@@ -57,7 +56,6 @@ def create_exec(request, template_id):
 
         new_task.save()
 
-    # return HttpResponse("NEW PAGE")
     return HttpResponseRedirect(reverse('executionindex', args=(workflow.id,)))
 
 @login_required
@@ -72,21 +70,16 @@ def index(request, exec_id):
     #     total_action_list.append(action_list)
     current_user = Actor.objects.filter(name=request.user.get_username())
     
-    # print(total_action_list)
     message = "Task Template is Broken. Cannot complete currently running task bacause no status_states specified"
     action_list = ""
     started_tasks = Task.objects.filter(status = "Started", process_id = exec_id)
     for task in started_tasks:
         action_list += task.template.status_states
 
-    # print(action_list)
-
     if (action_list!=""):
         message = ""
     
-    # print(Role.objects.filter(actor__id=current_user.get().id))
     user_roles = Role.objects.filter(actor__id=current_user.get().id)
-    # print(user_roles)
 
     template = loader.get_template('view_execution.html')
     collapse_show = "collapse show"
@@ -98,7 +91,6 @@ def index(request, exec_id):
         # 'total_action_list': total_action_list,
         'message' : message
     }
-    # return HttpResponse(output)
     return HttpResponse(template.render(context,request))
 
 @login_required
