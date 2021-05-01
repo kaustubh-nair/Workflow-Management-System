@@ -7,53 +7,86 @@ from .process_template_form import ProcessTemplateForm, EditProcessTemplateForm
 from .task_template_form import TaskTemplateForm
 
 def move_task_up(request, process_template_id, task_id):
+    grandparent = None
     task_template = TaskTemplate.objects.filter(id=task_id).first()
     parent = TaskTemplate.objects.filter(children__in=[task_id]).first()
-    grandparent = TaskTemplate.objects.filter(children__in=[parent.id]).first()
+    if parent:
+        grandparent = TaskTemplate.objects.filter(children__in=[parent.id]).first()
     child = task_template.children.first()
 
     task_template.children.clear()
-    grandparent.children.clear()
-    parent.children.clear()
+    if grandparent:
+        grandparent.children.clear()
+    if parent:
+        parent.children.clear()
 
-    grandparent.children.add(task_template)
-    parent.children.add(children)
-    task_template.children.add(parent)
+    if grandparent:
+        grandparent.children.add(task_template)
+    if parent and child:
+        parent.children.add(child)
+    if parent:
+        task_template.children.add(parent)
+        if parent.is_first_task == True:
+            parent.is_first_task = False
+            task_template.is_first_task = True
 
-    grandparent.save()
-    parent.save()
-    task_template.save()
+    if grandparent:
+        grandparent.save()
+    if child:
+        parent.save()
+    if parent:
+        task_template.save()
 
-    return redirect("/process/template/" + process_template_id + "/edit/")
+    return redirect("/process/template/" + str(process_template_id) + "/edit/")
 
 def move_task_down(request, process_template_id, task_id):
+    grandchild = None
     task_template = TaskTemplate.objects.filter(id=task_id).first()
     parent = TaskTemplate.objects.filter(children__in=[task_id]).first()
     child = task_template.children.first()
-    grandchild = child.children.first().children.first()
+    if child:
+        grandchild = child.children.first()
 
-    parent.children.clear()
-    child.children.clear()
+    if parent and child:
+        parent.children.clear()
+    if child:
+        child.children.clear()
     task_template.children.clear()
 
-    parent.children.add(child)
-    task_template.children.add(grandchild)
-    child.children.add(task_template)
+    if parent and child:
+        parent.children.add(child)
+    if grandchild:
+        task_template.children.add(grandchild)
+    if child:
+        child.children.add(task_template)
+        if task_template.is_first_task:
+            child.is_first_task = True
+            task_template.is_first_task = False
 
-    parent.save()
-    child.save()
+    if parent:
+        parent.save()
+    if child:
+        child.save()
     task_template.save()
 
-    return redirect("/process/template/" + process_template_id + "/edit/")
+    return redirect("/process/template/" + str(process_template_id) + "/edit/")
 
 def add_task(request, process_template_id):
     messages=[]
     process_template = ProcessTemplate.objects.filter(id=process_template_id).first()
     if request.method == 'POST':
         req = dict(request.POST)
-        TaskTemplate.objects.create(name=req['name'][0], description= req['description'][0], all_or_any=[True if 'all_or_any' in req else False][0], status_states=req['status_states'][0], role_id=int(req['role'][0]), process_template=process_template)
-        messages.append({'type': 'success', 'message': 'Task added successfully'})
+        new_task = TaskTemplate.objects.create(name=req['name'][0], description= req['description'][0], all_or_any=[True if 'all_or_any' in req else False][0], status_states=req['status_states'][0], role_id=int(req['role'][0]), process_template=process_template)
 
+        task_template = TaskTemplate.objects.filter(process_template=process_template, is_first_task=True).first()
+        tsk = [task_template]
+        while len(tsk[-1].children.all()) > 0:
+            tsk.append(tsk[-1].children.first())
+        last_task = tsk[-1]
+        last_task.children.add(new_task)
+        last_task.save()
+
+        messages.append({'type': 'success', 'message': 'Task added successfully'})
     form = TaskTemplateForm()
     context = {'process_template_id': process_template_id, 'form': form, 'messages': messages}
     return render(request, 'add_task_template.html', context)
