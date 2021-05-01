@@ -16,5 +16,10 @@ class Task(models.Model):
     @staticmethod
     def save_tasks(tasks, process_id):
         tasks['name'] = tasks['name'][1:]
+        first = True
         for i in range(len(tasks['name'])):
-            Task.objects.create(deadline=datetime.strptime(tasks['date'][i], '%Y-%m-%d'), template_id=tasks['task_id'][i],process_id=process_id)
+            if first:
+                Task.objects.create(deadline=datetime.strptime(tasks['date'][i], '%Y-%m-%d'), template_id=tasks['task_id'][i],process_id=process_id, status="Started")
+                first = False
+            else:
+                Task.objects.create(deadline=datetime.strptime(tasks['date'][i], '%Y-%m-%d'), template_id=tasks['task_id'][i],process_id=process_id, status="Not Started")

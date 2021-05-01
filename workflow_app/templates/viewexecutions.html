@@ -41,7 +41,7 @@
             <h4> Created By: {{ process_template.creator.name }}</h4>
           </div>
           <form
-          action="{% url 'create_execution' process_template.id %}"
+          action="{% url 'create_process' process_template.id %}"
           method="GET"
           >
             {% csrf_token %} {% buttons %}

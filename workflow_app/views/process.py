@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from django.http.response import HttpResponseNotAllowed, HttpResponseRedirect
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.template import loader
 from datetime import datetime
@@ -136,11 +138,11 @@ def edit_task(request, task_template_id):
     return render(request, 'edit_task_template.html', context)
 
 @login_required
-def create(request):
+def create(request, template_id):
     messages=[]
     form = ProcessForm()
     context = {}
-    process_template_id=0
+    process_template_id= template_id
     task_templates = []
     template = ''
 
@@ -149,9 +151,9 @@ def create(request):
         process_id = Process.save_process(req)
         Task.save_tasks(req, process_id)
         messages.append({'type': 'success', 'message': 'Workflow created successfully'})
+        return HttpResponseRedirect(reverse('executionindex', args=(process_id,)))
     else:
         request_body = dict(request.GET)
-        process_template_id = request_body['id'][0]
         template = ProcessTemplate.objects.get(pk=process_template_id).name
         task_templates = [o.__dict__ for o in list(TaskTemplate.objects.all().filter(process_template_id=process_template_id))]
         for i in range(len(task_templates)):

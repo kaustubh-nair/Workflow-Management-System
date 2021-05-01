@@ -82,7 +82,7 @@
                 <td>{{ def.creator.name }}</td>
                 <td>
                   <form
-                    action="{% url 'create_execution' def.id %}"
+                    action="{% url 'create_process' def.id %}"
                     method="GET"
                   >
                     {% csrf_token %} {% buttons %}
