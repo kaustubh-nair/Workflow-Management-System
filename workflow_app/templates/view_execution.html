@@ -30,7 +30,7 @@
             {% else %}
             <div class="card-header bg-primary">   
             {% endif %}
-                <a class="card-link" style="color: black;" data-toggle="collapse" data-parent="{{task.template.name}}" href="#{{task.id}}">{{ task.template.name }}</a>
+                <a class="card-link" style="color: black;" data-toggle="collapse"  href="#{{task.id}}">{{ task.template.name }}</a>
             </div>
             {% if task.status == "Not Started" %}
             <div id="{{task.id}}" class="collapse " >
