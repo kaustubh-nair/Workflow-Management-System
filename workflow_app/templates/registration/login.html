@@ -30,7 +30,7 @@
         <div >
   </form>
         <h4 style="padding-top: 3vw; margin-left: -15vh;"> Don't have an account? </h4>
-        <form action="{% url 'signup' %}" method="post" class="post-form">
+        <form action="{% url 'signup' %}" >
           {% csrf_token %} {% buttons %}
           <button  type="submit" class="btn btn-success btn-xs">
             Sign Up
