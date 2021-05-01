@@ -35,6 +35,8 @@
         <tr>
             <td>{{name}}</td>
             <td>
+                <a class="btn btn-light" href={{id|move_task_up_url:process_template_id}}>&#9650;</a>
+                <a class="btn btn-light" href={{id|move_task_down_url:process_template_id}}>&#9660;</a>
                 <a class="btn btn-primary" href={{id|get_task_edit_url}}>Edit</a>
             </td>
         </tr>

@@ -6,6 +6,46 @@ from .process_form import ProcessForm
 from .process_template_form import ProcessTemplateForm, EditProcessTemplateForm
 from .task_template_form import TaskTemplateForm
 
+def move_task_up(request, process_template_id, task_id):
+    task_template = TaskTemplate.objects.filter(id=task_id).first()
+    parent = TaskTemplate.objects.filter(children__in=[task_id]).first()
+    grandparent = TaskTemplate.objects.filter(children__in=[parent.id]).first()
+    child = task_template.children.first()
+
+    task_template.children.clear()
+    grandparent.children.clear()
+    parent.children.clear()
+
+    grandparent.children.add(task_template)
+    parent.children.add(children)
+    task_template.children.add(parent)
+
+    grandparent.save()
+    parent.save()
+    task_template.save()
+
+    return redirect("/process/template/" + process_template_id + "/edit/")
+
+def move_task_down(request, process_template_id, task_id):
+    task_template = TaskTemplate.objects.filter(id=task_id).first()
+    parent = TaskTemplate.objects.filter(children__in=[task_id]).first()
+    child = task_template.children.first()
+    grandchild = child.children.first().children.first()
+
+    parent.children.clear()
+    child.children.clear()
+    task_template.children.clear()
+
+    parent.children.add(child)
+    task_template.children.add(grandchild)
+    child.children.add(task_template)
+
+    parent.save()
+    child.save()
+    task_template.save()
+
+    return redirect("/process/template/" + process_template_id + "/edit/")
+
 def add_task(request, process_template_id):
     messages=[]
     process_template = ProcessTemplate.objects.filter(id=process_template_id).first()
@@ -28,8 +68,12 @@ def edit(request, process_id):
         process_template.save()
         messages.append({'type': 'success', 'message': 'Workflow edited successfully'})
     form = EditProcessTemplateForm(initial={'name': process_template.name, 'description': process_template.description})
-    task_templates = TaskTemplate.objects.filter(process_template=process_template)
-    task_templates = [(t.id, t.name) for t in task_templates]
+    task_template = TaskTemplate.objects.filter(process_template=process_template, is_first_task=True).first()
+    tsk = [task_template]
+    while len(tsk[-1].children.all()) > 0:
+        tsk.append(tsk[-1].children.first())
+
+    task_templates = [(t.id, t.name) for t in tsk]
     context = {'messages': messages, 'process_template_id': process_template.id, 'form': form, 'tasks': task_templates}
 
     return render(request, 'edit_process_template.html', context)

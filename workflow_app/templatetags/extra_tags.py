@@ -27,3 +27,10 @@ def get_process_edit_url(id):
 def get_add_new_task_url(id):
     return "/process/" + str(id) + "/task/add/"
 
+@register.filter
+def move_task_up_url(id, process_template_id):
+    return "/task/" + str(process_template_id) + "/" + str(id) + "/up/"
+
+@register.filter
+def move_task_down_url(id, process_template_id):
+    return "/task/" + str(process_template_id) + "/" + str(id) + "/down/"
