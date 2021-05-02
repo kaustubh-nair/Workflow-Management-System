@@ -25,6 +25,7 @@ urlpatterns = [
         path('change/deadline/<int:execution_id>/<int:task_id>', views.execution.change_deadline, name='changedeadline'),
         path('resetfrom/<int:execution_id>/<int:task_id>',views.execution.reset_from, name='reset_from'),
         path('delete/exec/<int:execution_id>', views.execution.delete_exec, name='delete_execution'),
+        path('reset/exec/<int:execution_id>', views.execution.reset_exec, name='reset_execution'),
         path('viewexec/<int:exec_id>/', views.execution.index, name='executionindex'),
         path('viewexec/<int:exec_id>/completetask/<int:task_id>/<str:action>', views.execution.completeTask, name='completing task'),
         path('accounts/signup', views.sessions.signup, name='signup'),

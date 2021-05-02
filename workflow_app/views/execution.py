@@ -40,6 +40,9 @@ def reset_from(request, execution_id, task_id):
     current_task.output = ""
     current_task.deadline = timezone.now()
     current_task.status = "Started"
+    actors_list = Actor.objects.filter(task__id = current_task.id)
+    for actor in actors_list:
+        current_task.actors.remove(actor)
     current_task.save()
     current_task_template = current_task.template
     print(current_task_template)
@@ -54,6 +57,9 @@ def reset_from(request, execution_id, task_id):
         next_task.output = ""
         next_task.deadline = timezone.now()
         next_task.status = "Not Started"
+        actors_list = Actor.objects.filter(task__id = next_task.id)
+        for actor in actors_list:
+            next_task.actors.remove(actor)
         next_task.save()
         next_task_template = next_task_template.children.all()
         try:
@@ -94,6 +100,22 @@ def create_exec(request, template_id):
         new_task.save()
 
     return HttpResponseRedirect(reverse('executionindex', args=(workflow.id,)))
+
+@login_required
+def reset_exec(request, execution_id):
+    tasks = Task.objects.filter(process__id = execution_id)
+    for task in tasks:
+        task.output = ""
+        if (task.template.is_first_task):
+            task.status = "Started"
+        else:
+            task.status = "Not Started"
+        task.deadline = timezone.now()
+        actors_list = Actor.objects.filter(task__id = task.id)
+        for actor in actors_list:
+            task.actors.remove(actor)
+        task.save()
+    return HttpResponseRedirect(reverse('executionindex', args=(execution_id,)))
 
 @login_required
 def index(request, exec_id):
