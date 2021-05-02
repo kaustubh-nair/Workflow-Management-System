@@ -44,8 +44,10 @@
               <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Name</th>
+                <th scope="col">Creator Name</th>
                 <th scope="col">Relevant Role</th>
                 <th scope="col">Deadline</th>
+                <th scope="col">Actions</th>
               </tr>
             </thead>
             {% if pending_execs %}
@@ -54,6 +56,7 @@
               <tr>
                 <th scope="row">{{ forloop.counter }}</th>
                 <td>{{ exec.name }}</td>
+                <td>{{ exec.creator.name }}</td>
                 <td>{{ task.template.role.name }}</td>
                 <td>{{ task.deadline }}</td>
                 <td>
@@ -79,6 +82,8 @@
               <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Name</th>
+                <th scope="col">Creator Name</th>
+                <th scope="col">Actions</th>
               </tr>
             </thead>
             {% if available_execs %}
@@ -87,6 +92,7 @@
               <tr>
                 <th scope="row">{{ forloop.counter }}</th>
                 <td>{{ exec.name }}</td>
+                <td>{{ exec.creator.name }}</td>
                 <td>
                   <form
                     action="{% url 'executionindex' exec.id %}"
