@@ -33,53 +33,77 @@
                 <a class="card-link" style="color: black;" data-toggle="collapse"  href="#{{task.id}}">{{ task.template.name }}</a>
             </div>
             {% if task.status == "Not Started" %}
-            <div id="{{task.id}}" class="collapse " >
+            <div id="{{task.id}}" class="collapse show" >
             {% elif task.status == "Started" %}
             <div id="{{task.id}}" class="collapse show " >
             {% else %}
-            <div id="{{task.id}}" class="collapse " >
+            <div id="{{task.id}}" class="collapse show" >
             {% endif %}
               <div class="card-body text-black">
-                <p class="card-text">
-                  Description: {{ task.template.description }}
-                </p>
-                <p class="card-text">
-                    Role: {{ task.template.role.name }}
-                </p>
-                <p class="card-text">
-                  Actors Completed: 
-                  {% for actor in task.actors.all %}
-                    {{ actor.name }}
-                  {% empty %}
-                    None
-                  {% endfor %}
-                </p>
-                <p class="card-text">
-                    Process Template Name: {{ task.template.process_template.name }}
-                </p> 
-                <p class="card-text">
-                  Should all users of this role complete it?: 
-                  <strong>{{ task.template.all_or_any }}</strong>
-              </p> 
-                <p class="card-text">
-                  Status: {{ task.status }}
-                </p>
-                <p class="card-text">
-                  Deadline: 
-                  {{task.deadline}}
-                  <form action="{% url 'changedeadline' exec_obj.id task.id%}" class="form-inline post-form" method="POST" style="display: inline-block;">
-                    {% csrf_token %}
-                    <input type="hidden" value="{{ task.id }}" name="task_id">
-                    <input type="text" name="deadline_change" placeholder="YYYY-MM-DD HH:MM">
-                    {% buttons %}
-                    <input type="submit" value="Change" class="btn btn-danger">
-                    {% endbuttons %}
-                  </form>
-                </p>
-                <p class="card-text">
-                  Current Output: <br>
-                  {{task.output}}
-                </p>
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <p class="card-text">
+                        Description: 
+                        <br>
+                        {{ task.template.description }}
+                      </p>
+                      <p class="card-text">
+                          Role: {{ task.template.role.name }}
+                      </p>
+                      <p class="card-text">
+                        Actors Completed: 
+                        {% for actor in task.actors.all %}
+                          {{ actor.name }}
+                        {% empty %}
+                          None
+                        {% endfor %}
+                      </p>
+                      <p class="card-text">
+                          Process Template Name: {{ task.template.process_template.name }}
+                      </p> 
+                      <p class="card-text">
+                        Should all users of this role complete it?: 
+                        <strong>{{ task.template.all_or_any }}</strong>
+                      </p> 
+                      <p class="card-text">
+                        Status: {{ task.status }}
+                      </p>
+                      <p class="card-text">
+                        Deadline: 
+                          {% if task.deadline|task_deadline %}
+                            {% comment %} <button class="btn btn-success">{{task.deadline}}</button> {% endcomment %}
+                             <strong style="color: green">{{ task.deadline }}</strong>
+                          {% else %}
+                            {% comment %} <button class="btn btn-danger">{{task.deadline}}</button> {% endcomment %}
+                             <stong style="color: red">{{ task.deadline }}</strong>
+                          {% endif %}
+                      </p>
+                    </div>
+                    <div class="col-md-6">
+                      <form action="{% url 'changedeadline' exec_obj.id task.id%}" class="form-inline" method="POST" style="display: inline-block;">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ task.id }}" name="task_id">
+                        <input type="date" name="deadline_change">
+                        {% buttons %}
+                        <input type="submit" value="Change" class="btn btn-secondary">
+                        {% endbuttons %}
+                      </form>
+                      <p class="card-text">
+                        Current Output: <br>
+                        {{task.output}}
+                      </p>
+                      <p class="card-text">
+                        <form action="{% url 'reset_from' exec_obj.id task.id %}" >
+                        {% csrf_token %}
+                        {% buttons %}
+                        <input type="submit" value="Reset from here" class="btn btn-primary">
+                        {% endbuttons %}
+                        </form>
+                      </p>
+                    </div>
+                  </div>
+                </div> 
               </div>
               <div class="card-footer">
                 {% if task.status == "Started" and task.template.role in user_roles %}

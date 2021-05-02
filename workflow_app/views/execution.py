@@ -34,6 +34,35 @@ def change_deadline(request, execution_id, task_id):
     current_task.get().save()
     return HttpResponseRedirect(reverse('executionindex', args=(execution_id,)))
 
+@login_required
+def reset_from(request, execution_id, task_id):
+    current_task = Task.objects.filter(id=task_id).get() # For sure a task will be given
+    current_task.output = ""
+    current_task.deadline = timezone.now()
+    current_task.status = "Started"
+    current_task.save()
+    current_task_template = current_task.template
+    print(current_task_template)
+    # return HttpResponse("LOL")
+    next_task_template = current_task_template.children.all()
+    try:
+        next_task_template = next_task_template.get()
+    except TaskTemplate.DoesNotExist:
+        next_task_template = None
+    while(next_task_template):
+        next_task = Task.objects.filter(template = next_task_template, process__id = execution_id ).get()
+        next_task.output = ""
+        next_task.deadline = timezone.now()
+        next_task.status = "Not Started"
+        next_task.save()
+        next_task_template = next_task_template.children.all()
+        try:
+            next_task_template = next_task_template.get()
+        except TaskTemplate.DoesNotExist:
+            next_task_template = None
+    
+    return HttpResponseRedirect(reverse('executionindex',args=(execution_id,)))
+        
 
 @login_required
 def delete_exec(request, execution_id):

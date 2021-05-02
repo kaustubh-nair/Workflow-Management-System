@@ -1,4 +1,7 @@
 from django import template
+import datetime
+from django.utils import timezone
+
 
 register = template.Library()
 
@@ -37,4 +40,7 @@ def move_task_down_url(id, process_template_id):
 
 @register.filter
 def task_deadline(time):
-    return "lol"
+    if(timezone.now()<time):
+        return True
+    else:
+        return False
