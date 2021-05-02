@@ -59,8 +59,7 @@
                 <td>
                   <form
                     action="{% url 'executionindex' exec.id %}"
-                    method="post"
-                    class="post-form"
+                    method="get"
                   >
                     {% csrf_token %} {% buttons %}
                     <button type="submit" class="btn btn-success btn-xs">
@@ -95,8 +94,7 @@
                 <td>
                   <form
                     action="{% url 'executionindex' exec.id %}"
-                    method="post"
-                    class="post-form"
+                    method="get"
                   >
                     {% csrf_token %} {% buttons %}
                     <button type="submit" class="btn btn-success btn-xs">

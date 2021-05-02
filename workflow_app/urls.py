@@ -22,6 +22,7 @@ urlpatterns = [
         path('task/template/<int:task_template_id>/edit/', views.process.edit_task, name='edit_process'),
         path('create/exec/<int:template_id>', views.execution.create_exec, name='create_execution'),
         path('change/execname/<int:execution_id>', views.execution.change_exec_name, name='changeexecname'),
+        path('change/deadline/<int:execution_id>/<int:task_id>', views.execution.change_deadline, name='changedeadline'),
         path('delete/exec/<int:execution_id>', views.execution.delete_exec, name='delete_execution'),
         path('viewexec/<int:exec_id>/', views.execution.index, name='executionindex'),
         path('viewexec/<int:exec_id>/completetask/<int:task_id>/<str:action>', views.execution.completeTask, name='completing task'),

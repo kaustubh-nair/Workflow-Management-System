@@ -28,6 +28,14 @@ def change_exec_name(request, execution_id):
     return HttpResponseRedirect(reverse('executionindex', args=(execution_id,)))
     
 @login_required
+def change_deadline(request, execution_id, task_id):
+    current_task = Task.objects.filter(id=task_id)
+    current_task.update(deadline = request.POST['deadline_change'])
+    current_task.get().save()
+    return HttpResponseRedirect(reverse('executionindex', args=(execution_id,)))
+
+
+@login_required
 def delete_exec(request, execution_id):
     current_exec = Process.objects.filter(id=execution_id).get()
     current_template = current_exec.template
@@ -62,13 +70,39 @@ def create_exec(request, template_id):
 def index(request, exec_id):
     exec_obj = Process.objects.filter(id = exec_id).get()
     task_list = Task.objects.filter(process_id=exec_id)
+    ordered_task_template_list = []
+    first_task = TaskTemplate.objects.filter(is_first_task = True, process_template = exec_obj.template)
+    try:
+        first_task = first_task.get()
+    except TaskTemplate.DoesNotExist:
+        first_task = None
 
-    # total_action_list = []
-    # for task in task_list:
-    #     task_template = task.template
-    #     task_template_actions = task_template.status_states
-    #     action_list = parse_csv(task_template_actions)
-    #     total_action_list.append(action_list)
+    ordered_task_template_list.append(first_task)
+    # next_task = TaskTemplate.objects.filter(children__contains = [first_task]).get()
+    next_task = first_task.children.all()
+    try:
+        next_task = next_task.get()
+    except TaskTemplate.DoesNotExist:
+        next_task = None
+    # print(next_task)
+    while(next_task):
+        # print(next_task)
+        # next_task = next_task.get()
+        ordered_task_template_list.append(next_task)
+        next_task = next_task.children.all()
+        try:
+            next_task = next_task.get()
+        except TaskTemplate.DoesNotExist:
+            next_task = None
+        # next_task = TaskTemplate.objects.filter(children__contains = [next_task]).get()
+
+    
+    # print(ordered_task_template_list)
+
+    ordered_task_list = []
+    for task_template in ordered_task_template_list:
+        ordered_task_list.append( Task.objects.filter(template = task_template, process__id = exec_id ).get())
+    
     current_user = Actor.objects.filter(name=request.user.get_username())
     
     message = "Task Template is Broken. Cannot complete currently running task bacause no status_states specified"
@@ -82,12 +116,23 @@ def index(request, exec_id):
     
     user_roles = Role.objects.filter(actor__id=current_user.get().id)
 
+    if (request.method=='POST'):
+        # print("LOL")
+        d = request.POST["deadline_change"]
+        task_id = request.POST["task_id"]
+        print(task_id, d)
+        task = Task.objects.filter(id = task_id).get()
+        task.deadline = d
+        task.save()
+        # task.update(deadline = d)
+        HttpResponseRedirect(reverse('executionindex',args=(exec_id,)))
+
     template = loader.get_template('view_execution.html')
     collapse_show = "collapse show"
     collapse = "collapse"
     context = {
         'exec_obj': exec_obj,
-        'task_list' : task_list,
+        'task_list' : ordered_task_list,
         'user_roles' : user_roles,
         # 'total_action_list': total_action_list,
         'message' : message
@@ -120,7 +165,7 @@ def completeTask(request, exec_id, task_id, action):
             current_task.get().actors.add(action_user.get())
             # current_task.get().save()
             out = current_task.get().output + action_user.get().name + ":" + action + ";"
-            print(out)
+            # print(out)
             current_task.update(output = out)
             # current_task.get().save()
 
@@ -137,7 +182,7 @@ def completeTask(request, exec_id, task_id, action):
             current_task.get().actors.add(action_user.get())
             # current_task.get().save()
             out = current_task.get().output + action_user.get().name + " : " + action + ","
-            print(out)
+            # print(out)
             current_task.update(output = out)            
             current_task.get().save()
 
@@ -155,7 +200,7 @@ def completeTask(request, exec_id, task_id, action):
         current_task.get().actors.add(action_user.get())
         # current_task.get().save()
         out = current_task.get().output + action_user.get().name + ":" + action + ";"
-        print(out)
+        # print(out)
         current_task.update(output = out)
         # current_task.get().save()
 

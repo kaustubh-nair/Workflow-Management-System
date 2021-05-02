@@ -58,10 +58,23 @@
                     Process Template Name: {{ task.template.process_template.name }}
                 </p> 
                 <p class="card-text">
+                  Should all users of this role complete it?: 
+                  <strong>{{ task.template.all_or_any }}</strong>
+              </p> 
+                <p class="card-text">
                   Status: {{ task.status }}
                 </p>
                 <p class="card-text">
-                  Deadline: {{task.deadline}}
+                  Deadline: 
+                  {{task.deadline}}
+                  <form action="{% url 'changedeadline' exec_obj.id task.id%}" class="form-inline post-form" method="POST" style="display: inline-block;">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{ task.id }}" name="task_id">
+                    <input type="text" name="deadline_change" placeholder="YYYY-MM-DD HH:MM">
+                    {% buttons %}
+                    <input type="submit" value="Change" class="btn btn-danger">
+                    {% endbuttons %}
+                  </form>
                 </p>
                 <p class="card-text">
                   Current Output: <br>

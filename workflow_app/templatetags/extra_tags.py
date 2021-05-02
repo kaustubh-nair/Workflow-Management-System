@@ -34,3 +34,7 @@ def move_task_up_url(id, process_template_id):
 @register.filter
 def move_task_down_url(id, process_template_id):
     return "/task/" + str(process_template_id) + "/" + str(id) + "/down/"
+
+@register.filter
+def task_deadline(time):
+    return "lol"
