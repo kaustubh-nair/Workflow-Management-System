@@ -44,18 +44,18 @@
               <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Name</th>
-                <th scope="col">Creator</th>
-                <th scope="col">Date Of Creation</th>
+                <th scope="col">Relevant Role</th>
+                <th scope="col">Deadline</th>
               </tr>
             </thead>
             {% if pending_execs %}
             <tbody>
-              {% for exec in pending_execs %}
+              {% for exec, task in pending_execs %}
               <tr>
                 <th scope="row">{{ forloop.counter }}</th>
-                <td><a href="#">{{ exec.name }}</a></td>
-                <td>{{ exec.creator.name }}</td>
-                <td>{{ exec.dateOfCreation }}</td>
+                <td>{{ exec.name }}</td>
+                <td>{{ task.template.role.name }}</td>
+                <td>{{ task.deadline }}</td>
                 <td>
                   <form
                     action="{% url 'executionindex' exec.id %}"
@@ -79,8 +79,6 @@
               <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Name</th>
-                <th scope="col">Creator</th>
-                <th scope="col">Date Of Creation</th>
               </tr>
             </thead>
             {% if available_execs %}
@@ -88,9 +86,7 @@
               {% for exec in available_execs %}
               <tr>
                 <th scope="row">{{ forloop.counter }}</th>
-                <td><a href="#">{{ exec.name }}</a></td>
-                <td>{{ exec.creator.name }}</td>
-                <td>{{ exec.dateOfCreation }}</td>
+                <td>{{ exec.name }}</td>
                 <td>
                   <form
                     action="{% url 'executionindex' exec.id %}"

@@ -137,7 +137,7 @@ def myexecutions(request, name):
                 for task in all_tasks:
                     r = Actor.objects.get(name=name).roles.all()
                     if task.status == "Started" and task.template.role in r:
-                        pending_execs.append(process)
+                        pending_execs.append([process, task])
                         flag_inner = 1
                 if not flag_inner:
                     available_execs.append(process)
