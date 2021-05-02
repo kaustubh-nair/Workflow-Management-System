@@ -171,8 +171,11 @@ def index(request, exec_id):
         # print("LOL")
         d = request.POST["deadline_change"]
         task_id = request.POST["task_id"]
-        print(task_id, d)
+        # t = request.POST["time_change"]
+        # print(task_id, d, t)
         task = Task.objects.filter(id = task_id).get()
+        # final =timezone.combine(d,t)
+        # print(final)
         task.deadline = d
         task.save()
         # task.update(deadline = d)
