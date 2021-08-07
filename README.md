@@ -3,10 +3,29 @@ Django application for creating and managing workflows at an abstract level. (Eg
 
 ## Images
 
+### Schema
+
 ![](images/7.png)
+
+### Homepage
+
 ![](images/1.png)
+
+### Creating workflow template
+
 ![](images/2.png)
+
+### Creating workflow
+
 ![](images/3.png)
+### Viewing status of workflow/modifying status of tasks
+
 ![](images/4.png)
-![](images/5.png)
+
+### Modify roles for users
 ![](images/6.png)
+
+### Edit workflow template
+
+![](images/5.png)
+
