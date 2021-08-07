@@ -1,2 +1,3 @@
-* Install Django https://docs.djangoproject.com/en/3.1/intro/install/
-* Adding mysql https://www.digitalocean.com/community/tutorials/how-to-create-a-django-app-and-connect-it-to-a-database
+# Workflow Management System
+Django application for creating and managing workflows at an abstract level. (Eg. Loan-issuing workflow, Job-application workflow.) Supports multi-user, flexible, and reusable workflows and tasks using templates.
+
